@@ -6,7 +6,7 @@
 # include <stdlib.h>
 # include <SDL.h>
  
-Uint32 GetPixel(SDL_Surface *surface, unsigned x, unsigned y);
-void PutPixel(SDL_Surface *surface, unsigned x, unsigned y, Uint32 pixel);
+Uint32 getpixel(SDL_Surface *surface, unsigned x, unsigned y);
+void putpixel(SDL_Surface *surface, unsigned x, unsigned y, Uint32 pixel);
  
 # endif

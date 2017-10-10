@@ -1,6 +1,7 @@
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
 #include <err.h>
+#include "pixel_operations.h"
 
 void wait_for_keypressed(void) {
   SDL_Event             event;
@@ -53,7 +54,44 @@ SDL_Surface* display_image(SDL_Surface *img) {
 
 }
 
+void ToGrayScale(SDL_Surface *img)
+{
+	for(int i = 0;i<img->w;i++)
+		for(int j = 0;j<img->h;j++)
+		{
+			Uint8 r, g, b;
+			Uint32 pixel = getpixel(img,i,j);
+			SDL_GetRGB(pixel,img->format, &r, &g, &b);
+			unsigned long luminance =  0.3*r + 0.59*g + 0.11*b;
+			r = b = g = luminance;
+			pixel = SDL_MapRGB(img->format,r,g,b);
+			putpixel(img,i,j,pixel);
+		}
+}
 
+void isBlack(unsigned long average)
+{
+	if (average<128)
+		average = 0;
+	else
+		average = 255;
+}
+
+void ToBlackAndWhite(SDL_Surface *img)
+{
+	for(int i = 0; i<img->w;i++)
+		for(int j = 0;j>img->h;j++)
+		{
+			Uint8 r, g, b;
+			Uint32 pixel = getpixel(img,i,j);
+			SDL_GetRGB(pixel,img->format, &r, &g, &b);
+			unsigned long average = (r + g + b)/3;
+			isBlack(average);
+			r = g = b = average;
+			pixel = SDL_MapRGB(img->format,r,g,b);
+			putpixel(img,i,j,pixel);
+		}
+}
 
 int main(int argc, char* argv[])
 {
@@ -63,9 +101,14 @@ int main(int argc, char* argv[])
 	if (argc<2)
 		errx(1,"Not enough arguments given.");
 	SDL_Surface *img = Load_Image(argv[1]);
-	
 	//A enlever
+	//display_image(img);
+	//ToGrayScale(img);
+	//display_image(img);
+	ToBlackAndWhite(img);
 	display_image(img);
+	SDL_SaveBMP(img,"modif.bmp");
+	SDL_FreeSurface(img);
 	SDL_Quit();
 	return 0;
 }

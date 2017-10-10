@@ -10,13 +10,13 @@ LDLIBS= `pkg-config --libs sdl` -lSDL_image
 OBJ= pixel_operations.o treat_image.o
 DEP= ${SRC:.o=.d}
  
-all: main
+all: treat_image
  
-main: ${OBJ}
+treat_image: ${OBJ}
  
 clean:
 	${RM} ${OBJ} ${DEP} *~
-	${RM} main
+	${RM} treat_image
  
 -include ${DEP}
  
