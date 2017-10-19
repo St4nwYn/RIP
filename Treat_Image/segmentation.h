@@ -8,7 +8,18 @@
 # include <SDL/SDL_image.h>
 # include <err.h>
 
-void VHisto(SDL_Surface img);
-void HHisto(SDL_Surface img);
+typedef struct Coord Coord;
+struct Coord 
+{
+	int x;
+	int y;
+};
+/*
+ * Coord coordonnees;
+ * coordonnees.x = 7; 
+ */
+ 
+Uint8 HHisto(SDL_Surface *img, int begin, int h, int w, Uint8 histo[]);
+void FindLines(SDL_Surface *img, Uint8 histo[]);
 
 #endif

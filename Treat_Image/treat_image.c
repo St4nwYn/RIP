@@ -84,7 +84,9 @@ int main(int argc, char* argv[])
 	 if (argc<2) 
 	  	 errx(1,"Not enough arguments given.");                             
 	 SDL_Surface *img = Load_Image(argv[1]);
-	 Polish(img);
+	 Uint8 histo[img->h];
+	 HHisto(img,0,img->h,img->w,histo);	
+	 FindLines(img,histo); 
 	 SDL_SaveBMP(img,"modif.bmp");
 	 SDL_FreeSurface(img);  
 	 SDL_Quit();                         
