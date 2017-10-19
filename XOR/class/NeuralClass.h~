@@ -1,0 +1,22 @@
+
+
+
+
+typedef struct input_Layer input_layer; 
+struct input_Layer {
+  /* nuber of inputs */
+  int nbinputs; //2
+  
+  /*number of outputs*/
+  int nboutputs; //2
+
+  /*number of hidden layers*/
+  int nbhidden; //2
+  
+  double W1[]; //2 par 4
+  double W2[]; //4 par 1 ATTENTION ERREUR PROBABLE
+};
+
+void forward(struct input_Layer input_layer, double X[]);//X de taille 8 (1.1,0.0,1.0,0.1) 4 par 2
+
+double sigmoid(double x);

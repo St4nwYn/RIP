@@ -1,0 +1,23 @@
+# Makefile
+ 
+CC = gcc -fsanitize=address
+CPPFLAGS = -MMD
+CFLAGS = -Wall -Wextra -std=c99 -O0 -g
+LDFLAGS = -lm
+LDLIBS = -lm
+ 
+OBJ = NeuralClass.o 
+DEP = ${OBJ:.o=.d}
+ 
+all: NeuralClass
+
+matrix_test: ${OBJ}
+ 
+.PHONY: clean
+ 
+clean:
+	${RM} ${OBJ} ${DEP} NeuralClass
+ 
+-include ${DEP}
+ 
+# END
