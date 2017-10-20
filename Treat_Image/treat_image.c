@@ -87,6 +87,11 @@ int main(int argc, char* argv[])
 	  	 errx(1,"Not enough arguments given.");                             
 	 //Variables
 	 SDL_Surface *img = Load_Image(argv[1]);
+	 ToGrayScale(img);
+	 Binarize(img);
+	 Polish(img, 10);
+	 
+	 
 	 int *histo = calloc(img->h,sizeof(int));
 	 int *p = calloc(1, sizeof(int));
 	 
@@ -97,9 +102,15 @@ int main(int argc, char* argv[])
 	 List2Struct(histo, box, p, img->w);
 	 //FindLines(img,box);
 	 
+	 //int *histoV = calloc(img->w,sizeof(int));
+	 //int *f = calloc(1, sizeof(int));
+	 //VHisto(img, box[0].x , box[0].y, box[0].z, histoV , f);
+	 //F(img, histoV,box[0].x , box[0].y, box[0].z, f);
 	 free(histo);
 	 free(box);
 	 free(p);
+	 //free(histoV);
+	 //free(f);
 	 SDL_SaveBMP(img,"modif.bmp");
 	 SDL_FreeSurface(img);  
 	 SDL_Quit();                         
