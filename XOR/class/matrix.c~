@@ -47,6 +47,15 @@ void kronecker(double mat1[], double mat2[], size_t lines, size_t cols, double r
     }
 }
 
+
+void matrice_apply(func_t f, double m[], size_t size, double res[])
+{
+  for(size_t i = 0; i < size; i++)
+    {
+      res[i] = f(m[i]);
+    }
+}
+
 void hconcat(double mat1[], double mat2[], size_t lines, size_t cols1, size_t cols2, size_t colsr, double res[])
 {
   for(size_t i = 0; i < lines; i++)
@@ -77,13 +86,7 @@ void mul(double m1[], double m2[], size_t n, size_t m, size_t p, double res[])
     }
 }
 
-void matrice_apply(func_t f, double m[], size_t size, double res[])
-{
-  for(size_t i = 0; i < size; i++)
-    {
-      res[i] = f(m[i]);
-    }
-}
+
 	      
 void print_matrix(double mat[], size_t lines, size_t cols)
 {
@@ -97,5 +100,7 @@ void print_matrix(double mat[], size_t lines, size_t cols)
     }
 }
 
-
- 
+/* int main() */
+/* { */
+/*   return 0; */
+/* } */
