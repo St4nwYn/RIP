@@ -13,13 +13,14 @@ struct Coord
 {
 	int x;
 	int y;
+	int z;
 };
 /*
  * Coord coordonnees;
  * coordonnees.x = 7; 
  */
  
-Uint8 HHisto(SDL_Surface *img, int begin, int h, int w, Uint8 histo[]);
-void FindLines(SDL_Surface *img, Uint8 histo[]);
-
+void HHisto(SDL_Surface *img, int be, int h, int w, int *histo, int *p);
+void FindLines(SDL_Surface *img, Coord *box);
+void List2Struct(int *histo, Coord *box, int *p, int size);
 #endif

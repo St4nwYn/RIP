@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
 #include "treat_image.h"
@@ -77,16 +78,28 @@ SDL_Surface* display_image(SDL_Surface *img) {
 }*/
 
 int main(int argc, char* argv[])                                                
-{    
+{
+	//First = check the entry    
 	SDL_Init(SDL_INIT_VIDEO);                                                   
 	 if (argc>2)                    
 		 errx(1,"Too many arguments given.");
 	 if (argc<2) 
 	  	 errx(1,"Not enough arguments given.");                             
+	 //Variables
 	 SDL_Surface *img = Load_Image(argv[1]);
-	 Uint8 histo[img->h];
-	 HHisto(img,0,img->h,img->w,histo);	
-	 FindLines(img,histo); 
+	 int *histo = calloc(img->h,sizeof(int));
+	 int *p = calloc(1, sizeof(int));
+	 
+	 
+	 HHisto(img,0,img->h,img->w,histo,p);	
+	 
+	 Coord *box = calloc(*p, sizeof(Coord));
+	 List2Struct(histo, box, p, img->w);
+	 //FindLines(img,box);
+	 
+	 free(histo);
+	 free(box);
+	 free(p);
 	 SDL_SaveBMP(img,"modif.bmp");
 	 SDL_FreeSurface(img);  
 	 SDL_Quit();                         
