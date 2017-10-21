@@ -29,10 +29,8 @@ struct CoordBlock
 	int* nextBlock;
 };
 
-typedef void(*funct_t)(Coord);
-
-void Polish(SDL_Surface *img, int l);
-void ToEvery(funct_t fonct, Coord *box, int end);
+void Polish(SDL_Surface *img, int l, int *margeG, int *margeD);
+void PolishH(SDL_Surface *img, int l, int *margeG, int *margeD);
 int HHisto(SDL_Surface *img, Coord *histo, Coord box,int p);
 int List2StructLine(Coord *histo, Coord *box, int p);
 void Print(SDL_Surface *img, Coord box);

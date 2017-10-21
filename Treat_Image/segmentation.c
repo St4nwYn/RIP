@@ -4,11 +4,11 @@
 #include "segmentation.h"
 
 
-void Polish(SDL_Surface *img, int l)
+void Polish(SDL_Surface *img, int l, int *margeG, int *margeD)
 {
 	Uint32 pixel;
 	Uint8 r,g,b;
-	int end = (img -> h)-l;
+	int end = (img -> h)-l, v = 1;
 	for(int i = 0; i < img-> w; i++)
 	{
 		for(int j = 0; j < end; j++)
@@ -43,17 +43,114 @@ void Polish(SDL_Surface *img, int l)
 				}
 				
 			}
+			else
+			{
+				if(v==1)
+				{
+					*margeG = i;
+					v = 0;
+				}
+				
+				if(v == 0 && i+1 < img ->w)
+				{
+					pixel = getpixel(img,i+1,j);
+					SDL_GetRGB(pixel,img->format, &r, &g, &b);
+					if (r== 255)
+						*margeD = i;
+				}
+			}
 		}
 		
 	}
 }
 
-void ToEvery(funct_t fonct, Coord *box, int end)
+void PolishH(SDL_Surface *img, int l, int*margeG, int *margeD)
 {
-	for(int i = 0; i < end; i++)
-		fonct(box[i]);
+	Uint32 pixel;
+	Uint8 r,g,b;
+	int end = (*margeD) -l;
+	
+	for(int j = 0; j < img-> h; j++)
+	{	
+		for(int i = *margeG; i < end; i++)
+		{				
+			pixel = getpixel(img,i,j);
+			SDL_GetRGB(pixel, img->format, &r, &g, &b);
+			if (r == 255)
+			{				
+				int k = 1;
+				int makeitblack = 0;
+				while(k<l &&  k>=0)
+				{
+					pixel = getpixel(img,i+k,j);
+					SDL_GetRGB(pixel, img->format, &r, &g, &b);
+					if (makeitblack == 1)
+					{	
+						
+						pixel = SDL_MapRGB(img->format, 0, 0, 0);
+						putpixel(img, i+k, j, pixel);
+						k--;
+					}
+					
+					else
+					{
+						if (r != 255)
+							makeitblack = 1;
+							
+						else
+							k++;
+					}	
+						
+				}
+				
+			}
+		}
+		
+	}
 }
+/*
+void DefineBlocs(SDL_Surface *img, Coord *coordTab, int p)
+{
+	Uint32 pixel;
+	Uint8 r,g,b;
+	Coord coordBox;
+	int h,w;
+	
+	for (int i = 0; i < img->w ; i++)
+	{
+		h = w = 0;
+		
+		for (int j = 0; j < img ->h; j++)
+		{
+			pixel = getpixel(img,i,j);
+			SDL_GetRGB(pixel, img->format, &r, &g, &b);
+			if (r == g == b == 255)
+				break;
+			
+			coordBox.x = i;
+			coordBox.y = j;
+			int isBlack = 1;
+			while(j < img ->h && isBlack == 1 )
+			{
+				pixel = getpixel(img,i,j);
+				SDL_GetRGB(pixel, img->format, &r, &g, &b);
+				if (r == g == b == 0)
+				{
+					h++;
+					j++;
+				}
+				else
+					isBlack =0;
+			}
+			coordBox.h = h;
 
+			
+		}
+		
+	}
+	
+}
+*/
 int HHisto(SDL_Surface *img, Coord *histo, Coord box, int p)
 {   
 	Uint32 pixel;
@@ -147,32 +244,44 @@ void Print(SDL_Surface *img, Coord box)
 	{
 		pixel = getpixel(img,i,j);
 		SDL_GetRGB(pixel, img->format, &r, &g, &b);
-		pixel = SDL_MapRGB(img->format, 255, 0, 0);
-		putpixel(img, i, j, pixel);
+		if (g!= 0)
+		{
+			pixel = SDL_MapRGB(img->format, 255, 0, 0);
+			putpixel(img, i, j, pixel);
+		}
 	}
 	
 	for(; i < box.x + box.w; i++)
 	{
 		pixel = getpixel(img,i,j);
 		SDL_GetRGB(pixel, img->format, &r, &g, &b);
-		pixel = SDL_MapRGB(img->format, 255, 0, 0);
-		putpixel(img, i, j, pixel);
+		if (g!= 0)
+		{
+			pixel = SDL_MapRGB(img->format, 255, 0, 0);
+			putpixel(img, i, j, pixel);
+		}
 	}
 	
 	for(; j > box.y -1 ; j--)
 	{
 		pixel = getpixel(img,i,j);
 		SDL_GetRGB(pixel, img->format, &r, &g, &b);
-		pixel = SDL_MapRGB(img->format, 255, 0, 0);
-		putpixel(img, i, j, pixel);
+		if (g != 0)
+		{
+			pixel = SDL_MapRGB(img->format, 255, 0, 0);
+			putpixel(img, i, j, pixel);
+		}
 	}
 		
 	for(; i > box.x-1; i--)
 	{
 		pixel = getpixel(img,i,j);
 		SDL_GetRGB(pixel, img->format, &r, &g, &b);
-		pixel = SDL_MapRGB(img->format, 255, 0, 0);
-		putpixel(img, i, j, pixel);
+		if (g!= 0)
+		{
+			pixel = SDL_MapRGB(img->format, 255, 0, 0);
+			putpixel(img, i, j, pixel);
+		}
 	}
 }
                                             

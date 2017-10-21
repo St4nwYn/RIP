@@ -59,24 +59,6 @@ SDL_Surface* display_image(SDL_Surface *img) {
 
 }
 
-
-/*int main(int argc, char* argv[])
-{
-	SDL_Init(SDL_INIT_VIDEO);
-	if (argc>2)
-		errx(1,"Too many arguments given.");
-	if (argc<2)
-		errx(1,"Not enough arguments given.");
-	SDL_Surface *img = Load_Image(argv[1]);
-	ToGrayScale(img);
-	Binarize(img);
-	//Save image BMP format only
-	SDL_SaveBMP(img,"modif.bmp");
-	SDL_FreeSurface(img);
-	SDL_Quit();
-	return 0;
-}*/
-
 int main(int argc, char* argv[])                                                
 {
 	//First = check the entry    
@@ -94,10 +76,17 @@ int main(int argc, char* argv[])
 	 SDL_SaveBMP(img,"binarize.bmp");
 	 SDL_FreeSurface(img);  
 	 
-	 //Segmentation
-	 img = Load_Image("binarize.bmp");
-	 //Polish(img, 10);
+	 //Lissage
 	 
+	 int *margeD = calloc(1,sizeof(int));
+	 int *margeG = calloc(1,sizeof(int));
+	 *margeD = 0;
+	 *margeG = 0;
+	 img = Load_Image("binarize.bmp");
+	 Polish(img, 30,margeG,margeD);
+	 PolishH(img, 30,margeG,margeD);	 
+	 //display_image(img);
+	 /*
 	 //Rect
 	 Coord *box = calloc(img -> h, sizeof(Coord));
 	 box[0].x = 0;
@@ -111,6 +100,7 @@ int main(int argc, char* argv[])
 	 int p = 0;
 	 //for every;
 	 p = HHisto(img,histo,box[0],p);
+	 
 	 
 	 //remettre à 0 coords.
 	 p = List2StructLine(histo,box,p);
@@ -134,7 +124,7 @@ int main(int argc, char* argv[])
 		Print(img,box[i]); 	 
 	
 	 free(histo);
-	 free(box);
+	 free(box);*/
 	 SDL_SaveBMP(img,"modif.bmp");
 	 SDL_FreeSurface(img);
 	 SDL_Quit();                         
