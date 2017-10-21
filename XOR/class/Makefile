@@ -11,7 +11,7 @@ DEP = ${OBJ:.o=.d}
  
 all: NeuralClass
 
-matrix_test: ${OBJ}
+NeuralClass: ${OBJ}
  
 .PHONY: clean
  

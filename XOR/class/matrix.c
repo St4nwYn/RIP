@@ -3,6 +3,8 @@
 #include <assert.h>
 #include "matrix.h"
 #include "NeuralClass.h"
+#include <time.h>
+
 void transpose(double mat[], size_t lines, size_t cols, double res[])
 {
   for(size_t i = 0; i < lines; i++)
@@ -25,6 +27,16 @@ void add(double mat1[], double mat2[], size_t lines, size_t cols, double res[])
     }
 }
 
+void sub(double mat1[], double mat2[], size_t lines, size_t cols, double res[])
+{
+    for(size_t i = 0; i < lines; i++)
+    {
+      for(size_t j = 0; j < cols; j++)
+	{
+	  res[j + i * cols] = mat1[j + i * cols] - mat2[j + i * cols];
+	}
+    }
+}
 void hadamard(double mat1[], double mat2[], size_t lines, size_t cols, double res[])
 {
   for(size_t i = 0; i < lines; i++)
@@ -56,6 +68,7 @@ void matrice_apply(func_t f, double m[], size_t size, double res[])
     }
 }
 
+
 void hconcat(double mat1[], double mat2[], size_t lines, size_t cols1, size_t cols2, size_t colsr, double res[])
 {
   for(size_t i = 0; i < lines; i++)
@@ -86,7 +99,15 @@ void mul(double m1[], double m2[], size_t n, size_t m, size_t p, double res[])
     }
 }
 
-
+double sum(double m[], size_t len)
+{
+  double j = 0;
+  for(size_t i = 0; i < len; i++)
+    {
+      j += m[i];
+    }
+  return j;
+}
 	      
 void print_matrix(double mat[], size_t lines, size_t cols)
 {
@@ -94,7 +115,7 @@ void print_matrix(double mat[], size_t lines, size_t cols)
     {
       for(size_t j = 0; j < cols; j++)
 	{
-	  printf("%4g",mat[j + i * cols]);
+	  printf("%10g",mat[j + i * cols]);
 	}
       printf("\n");
     }
@@ -104,3 +125,4 @@ void print_matrix(double mat[], size_t lines, size_t cols)
 /* { */
 /*   return 0; */
 /* } */
+

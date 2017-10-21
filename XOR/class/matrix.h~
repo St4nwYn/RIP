@@ -7,12 +7,14 @@
 #ifndef _MATRIXSTDOPERATIONS_MATRIX_H_
 #define _MATRIXSTDOPERATIONS_MATRIX_H_
  
+#include <stdlib.h>
+
 /*
  * transpose(mat, lines, cols, res)
  * transpose the lines X cols matrix mat into a cols X lines matrix
  * result will be stored in res
  */
-typedef double (*func_t)(double);
+
 
 void transpose(double mat[], size_t lines, size_t cols, double res[]);
  
@@ -31,6 +33,9 @@ void add(double mat1[], double mat2[], size_t lines, size_t cols, double res[]);
  *        m2 is a m X p matrix
  *        res is a n X p matrix
  */
+
+void sub(double mat1[], double mat2[], size_t lines, size_t cols, double res[]);
+  
 void hadamard(double mat1[], double mat2[], size_t lines, size_t cols, double res[]);
 /*
  *
@@ -50,6 +55,10 @@ void kronecker(double mat1[], double mat2[], size_t lines, size_t cols, double r
  *
  *
  */
+
+typedef double (*func_t)(double);
+
+void initW(double W[], size_t size);
 
 void matrice_apply(func_t f, double m[], size_t size, double res[]);
 

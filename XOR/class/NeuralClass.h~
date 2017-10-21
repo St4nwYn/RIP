@@ -2,8 +2,8 @@
 
 
 
-typedef struct input_Layer input_layer; 
-struct input_Layer {
+ 
+struct Layers {
   /* nuber of inputs */
   int nbinputs; //2
   
@@ -13,10 +13,20 @@ struct input_Layer {
   /*number of hidden layers*/
   int nbhidden; //2
   
-  double W1[]; //2 par 4
-  double W2[]; //4 par 1 ATTENTION ERREUR PROBABLE
+  double W1[8]; //2 par 4
+  double W2[4]; //4 par 1 ATTENTION ERREUR PROBABLE
 };
 
-void forward(struct input_Layer input_layer, double X[]);//X de taille 8 (1.1,0.0,1.0,0.1) 4 par 2
+typedef struct Layers layer;
 
-double sigmoid(double x);
+void costFunctionPrime(layer neuron, double X[],double Y[]);
+
+double scalar(double z);
+
+void learn(layer neuron, double W1[], double W2[]);
+
+void forward(layer layers, double X[]);//X de taille 8 (1.1,0.0,1.0,0.1) 4 par 2
+
+double sigmoid(double z);
+
+double sigmoidprime(double z);
