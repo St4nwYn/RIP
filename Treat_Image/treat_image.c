@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
 #include "treat_image.h"
@@ -58,37 +59,74 @@ SDL_Surface* display_image(SDL_Surface *img) {
 
 }
 
-
-/*int main(int argc, char* argv[])
-{
-	SDL_Init(SDL_INIT_VIDEO);
-	if (argc>2)
-		errx(1,"Too many arguments given.");
-	if (argc<2)
-		errx(1,"Not enough arguments given.");
-	SDL_Surface *img = Load_Image(argv[1]);
-	ToGrayScale(img);
-	Binarize(img);
-	//Save image BMP format only
-	SDL_SaveBMP(img,"modif.bmp");
-	SDL_FreeSurface(img);
-	SDL_Quit();
-	return 0;
-}*/
-
 int main(int argc, char* argv[])                                                
-{    
+{
+	//First = check the entry    
 	SDL_Init(SDL_INIT_VIDEO);                                                   
 	 if (argc>2)                    
 		 errx(1,"Too many arguments given.");
 	 if (argc<2) 
 	  	 errx(1,"Not enough arguments given.");                             
-	 SDL_Surface *img = Load_Image(argv[1]);
-	 Uint8 histo[img->h];
-	 HHisto(img,0,img->h,img->w,histo);	
-	 FindLines(img,histo); 
-	 SDL_SaveBMP(img,"modif.bmp");
+	 
+	 SDL_Surface *img;
+	 //Pretreat
+	 img = Load_Image(argv[1]);	 
+	 ToGrayScale(img);
+	 Binarize(img);
+	 SDL_SaveBMP(img,"binarize.bmp");
 	 SDL_FreeSurface(img);  
+	 
+	 //Lissage
+	 
+	 int *margeD = calloc(1,sizeof(int));
+	 int *margeG = calloc(1,sizeof(int));
+	 *margeD = 0;
+	 *margeG = 0;
+	 img = Load_Image("binarize.bmp");
+	 Polish(img, 30,margeG,margeD);
+	 PolishH(img, 30,margeG,margeD);	 
+	 //display_image(img);
+	 /*
+	 //Rect
+	 Coord *box = calloc(img -> h, sizeof(Coord));
+	 box[0].x = 0;
+	 box[0].y = 0;
+	 box[0].w = (img -> w);
+	 box[0].h = (img -> h);
+	 
+	 
+	 //LineBlocks
+	 Coord *histo = calloc(img -> h, sizeof(Coord));
+	 int p = 0;
+	 //for every;
+	 p = HHisto(img,histo,box[0],p);
+	 
+	 
+	 //remettre à 0 coords.
+	 p = List2StructLine(histo,box,p);
+	 
+	 
+	 free(histo);
+	 histo = calloc((img -> w) * (img -> h), sizeof(Coord));
+	 int p2 = 0;
+	 
+	 for (int i = 0; i < p; i++)
+	 {
+		 p2 = VHisto(img,histo,box[i],p2);
+		 //printf("(x,y,w,h,p) = (%d,%d,%d,%d,%d)\n", histo[i].x, histo[i].y, histo[i].w, histo[i].h,i);
+	 }
+	 printf("%d\n",p2);
+	 p = 0;
+	 box = calloc((img -> h) * (img -> w), sizeof(Coord));
+	 p2 = List2StructChar(histo,box,p2); 
+	 
+	 for (int i = 0; i < p2; i++)
+		Print(img,box[i]); 	 
+	
+	 free(histo);
+	 free(box);*/
+	 SDL_SaveBMP(img,"modif.bmp");
+	 SDL_FreeSurface(img);
 	 SDL_Quit();                         
 	 return 0; 
 }  
