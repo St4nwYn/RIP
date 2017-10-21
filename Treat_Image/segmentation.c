@@ -48,154 +48,194 @@ void Polish(SDL_Surface *img, int l)
 	}
 }
 
-void DefineBlocks(SDL_Surface *img)
+void ToEvery(funct_t fonct, Coord *box, int end)
 {
+	for(int i = 0; i < end; i++)
+		fonct(box[i]);
 }
 
-void HHisto(SDL_Surface *img, int be, int h, int w, int *histo , int *p)
-{
+int HHisto(SDL_Surface *img, Coord *histo, Coord box, int p)
+{   
 	Uint32 pixel;
 	Uint8 r,g,b,average;
-	int sum, cpt = 0;
-	for(int j = be ; j < be+h ; j++)
+	int sum;
+	int bx = box.x, bxl = box.x + box.w;
+	
+	for(int j = box.y; j < box.h+box.y ; j++)
 	{
 		sum = 0;
-		for(int i = be; i < be + w ; i++)
+		for( int i = bx; i < bxl  ; i++)
 		{
 			pixel = getpixel(img,i,j);
 			SDL_GetRGB(pixel, img->format, &r, &g, &b);
-			sum+=r;
+			sum+=r;	
 		}
-		average = sum/w;		
+		average = sum/box.w ;
+		
 		if (average!=255)
-		{			
-			*(histo + cpt) = j;
-			cpt++;			
-		}	
+		{	
+			histo[p].x = box.x;
+			histo[p].y = j;
+			histo[p].w = box.w;
+			histo[p].h = 1;
+			p++;
+		}
 	}
-	*p = cpt;
+	
+	return p;
 }
 
-void List2Struct(int *histo, Coord *box, int *p, int size)
+int List2StructLine(Coord *histo, Coord *box, int p)
 {
 	int cpt = 0, boxcpt = 0;
 	Coord coordBox;
-	for(int i = 0; i < *p; i++)
+	for(int i = 0; i < p; i++)
 	{		
+		
 		if (cpt == 0)
 		{
-			//x = début, y = hauteur, z = largeur
-			coordBox.x = *(histo + i);
-			coordBox.z = size;	
+			coordBox.y = histo[i].y;
+			coordBox.x = histo[i].x;
+			coordBox.w = histo[i].w; 
+			
 		}
-		
-		if (*(histo + i + 1) == *(histo + i) + 1)
+		if (histo[i+1].y == histo[i].y + 1)
 			cpt++;
 		else
 		{
-			coordBox.y = cpt;
+			coordBox.h = cpt;
 			box[boxcpt] = coordBox;
+			
 			boxcpt++;
 			cpt = 0;			
 		}	
 		
-	}
-	*p = boxcpt;
+		
+	}	
+		
+	return boxcpt;
 }
 
-void FindLines(SDL_Surface *img, Coord *box)
+void Print(SDL_Surface *img, Coord box)
 {
-	Uint32 pixel;
+	Uint32 pixel;		
 	Uint8 r,g,b;
-	int boxcpt = 0, up = 0;
-	for(int j = 0 ; j < img->h ; j++)
+	if(box.x> 0) 
 	{
-		if (box[boxcpt].x == j)
-			up = 1;
-			
-		if (box[boxcpt].x + box[boxcpt].y == j || up == 1 )
-		{			
-			if (up == 1)
-				j--;
-			else
-				j++;
-				
-			for(int i = 0; i < box[boxcpt].z; i++)
-			{
-				pixel = getpixel(img,i,j);
-				SDL_GetRGB(pixel, img->format, &r, &g, &b);
-				pixel = SDL_MapRGB(img->format, 255, 0, 0);
-				putpixel(img, i, j, pixel);
-			}
-			
-			if (up == 1)
-				j++;
-			else
-			{
-				j--;
-				boxcpt++;
-			}
-			up = 0;
-		}
+		box.x--;
+		if (box.x + box.w < img->w)
+			box.w+=2;
+		else
+			box.w++;
+	}
+	else if (box.x + box.w < img->w)
+		box.w++;
+	
+	if(box.y>0)
+	{
+		box.y--;
+		if (box.y + box.h < img->h)
+			box.h+=2;
+		else
+			box.w++;
+	}
+	else if (box.y + box.h < img -> h)
+		box.h++;
+	
+	int i = box.x, j = box.y;
+	for(; j < box.y + box.h ; j++)
+	{
+		pixel = getpixel(img,i,j);
+		SDL_GetRGB(pixel, img->format, &r, &g, &b);
+		pixel = SDL_MapRGB(img->format, 255, 0, 0);
+		putpixel(img, i, j, pixel);
+	}
+	
+	for(; i < box.x + box.w; i++)
+	{
+		pixel = getpixel(img,i,j);
+		SDL_GetRGB(pixel, img->format, &r, &g, &b);
+		pixel = SDL_MapRGB(img->format, 255, 0, 0);
+		putpixel(img, i, j, pixel);
+	}
+	
+	for(; j > box.y -1 ; j--)
+	{
+		pixel = getpixel(img,i,j);
+		SDL_GetRGB(pixel, img->format, &r, &g, &b);
+		pixel = SDL_MapRGB(img->format, 255, 0, 0);
+		putpixel(img, i, j, pixel);
+	}
+		
+	for(; i > box.x-1; i--)
+	{
+		pixel = getpixel(img,i,j);
+		SDL_GetRGB(pixel, img->format, &r, &g, &b);
+		pixel = SDL_MapRGB(img->format, 255, 0, 0);
+		putpixel(img, i, j, pixel);
 	}
 }
-                                                        
-void VHisto(SDL_Surface *img, int be, int h, int w, int *histo , int *p)
+                                            
+int VHisto(SDL_Surface *img, Coord *histo , Coord box, int p)
 {
 	Uint32 pixel;
 	Uint8 r,g,b,average;
-	int sum, cpt = 0;
-	for(int i = be; i < be + w ; i++)
+	int sum;
+	for(int i = box.x; i < box.x + box.w ; i++)
 	{
-		sum = 0;
-		for(int j = be ; j < be + h ; j++)
-		{
 		
+		sum = 0;
+		for(int j = box.y ; j < box.y + box.h ; j++)
+		{		
 			pixel = getpixel(img,i,j);
 			SDL_GetRGB(pixel, img->format, &r, &g, &b);
 			sum+=r;
 		}
-		average = sum/w;		
+		average = sum/ box.h;		
 		if (average!=255)
-		{			
-			*(histo + cpt) = i;
-			cpt++;			
+		{	
+			histo[p].y = box.y;
+			histo[p].h = box.h;
+			histo[p].x = i;		
+			histo[p].w = 1;
+			p++;			
 		}	
 	}
-	*p = cpt;
-	for(int i = 0; i < *p ; i++)
-	{
-		printf("%d\n", histo[i]);
-	}
+
+
+	return p;
 }
 
-/*void F(SDL_Surface *img, int *histoV, int x, int y, int z, int *p)
+int List2StructChar(Coord *histo, Coord *box, int p)
 {
-    Uint32 pixel;
-	Uint8 r,g,b;
-	int cpt = 0;
-	for(int j = x ; j < z ; j++)
-	{
-		
-		if (cpt = 0)
+	int cpt = 0, boxcpt = 0;
+	Coord coordBox;
+	for(int i = 0; i < p; i++)
+	{				
+		if (cpt == 0)
 		{
-			for(int i = histo[]; i < histo [0] + y; i++)
-			{
-				pixel = getpixel(img,i,j);
-				SDL_GetRGB(pixel, img->format, &r, &g, &b);
-				pixel = SDL_MapRGB(img->format, 255, 0, 0);
-				putpixel(img, i, j, pixel);
-			}
+			coordBox.y = histo[i].y;
+			coordBox.x = histo[i].x;
+			coordBox.h = histo[i].h; 
+			
 		}
-		if(histo[i] + 1 == histo[i+1])
-		{					
-			for(int i = 0; i < y; i++)
-			{
-				pixel = getpixel(img,i,j);
-				SDL_GetRGB(pixel, img->format, &r, &g, &b);
-				pixel = SDL_MapRGB(img->format, 255, 0, 0);
-				putpixel(img, i, j, pixel);
-			}
-		}
-	}	
-}*/
+		if (histo[i+1].x == histo[i].x + 1)
+			cpt++;
+		else
+		{
+			coordBox.w = cpt;
+			box[boxcpt] = coordBox;
+			boxcpt++;
+			cpt = 0;			
+		}	
+	}
+	
+	//for (int i = 0; i < 100 ; i++)
+	//{
+	//	printf("(x,y,w,h) = (%d,%d,%d,%d)\n", box[i].x, box[i].y, box[i].w, box[i].h);
+	//}
+	
+	//printf("%d\n",boxcpt);
+	return boxcpt;
+}	
+	

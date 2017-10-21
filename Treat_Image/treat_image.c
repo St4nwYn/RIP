@@ -85,34 +85,58 @@ int main(int argc, char* argv[])
 		 errx(1,"Too many arguments given.");
 	 if (argc<2) 
 	  	 errx(1,"Not enough arguments given.");                             
-	 //Variables
-	 SDL_Surface *img = Load_Image(argv[1]);
+	 
+	 SDL_Surface *img;
+	 //Pretreat
+	 img = Load_Image(argv[1]);	 
 	 ToGrayScale(img);
 	 Binarize(img);
-	 Polish(img, 10);
+	 SDL_SaveBMP(img,"binarize.bmp");
+	 SDL_FreeSurface(img);  
+	 
+	 //Segmentation
+	 img = Load_Image("binarize.bmp");
+	 //Polish(img, 10);
+	 
+	 //Rect
+	 Coord *box = calloc(img -> h, sizeof(Coord));
+	 box[0].x = 0;
+	 box[0].y = 0;
+	 box[0].w = (img -> w);
+	 box[0].h = (img -> h);
 	 
 	 
-	 int *histo = calloc(img->h,sizeof(int));
-	 int *p = calloc(1, sizeof(int));
+	 //LineBlocks
+	 Coord *histo = calloc(img -> h, sizeof(Coord));
+	 int p = 0;
+	 //for every;
+	 p = HHisto(img,histo,box[0],p);
+	 
+	 //remettre à 0 coords.
+	 p = List2StructLine(histo,box,p);
 	 
 	 
-	 HHisto(img,0,img->h,img->w,histo,p);	
+	 free(histo);
+	 histo = calloc((img -> w) * (img -> h), sizeof(Coord));
+	 int p2 = 0;
 	 
-	 Coord *box = calloc(*p, sizeof(Coord));
-	 List2Struct(histo, box, p, img->w);
-	 //FindLines(img,box);
+	 for (int i = 0; i < p; i++)
+	 {
+		 p2 = VHisto(img,histo,box[i],p2);
+		 //printf("(x,y,w,h,p) = (%d,%d,%d,%d,%d)\n", histo[i].x, histo[i].y, histo[i].w, histo[i].h,i);
+	 }
+	 printf("%d\n",p2);
+	 p = 0;
+	 box = calloc((img -> h) * (img -> w), sizeof(Coord));
+	 p2 = List2StructChar(histo,box,p2); 
 	 
-	 //int *histoV = calloc(img->w,sizeof(int));
-	 //int *f = calloc(1, sizeof(int));
-	 //VHisto(img, box[0].x , box[0].y, box[0].z, histoV , f);
-	 //F(img, histoV,box[0].x , box[0].y, box[0].z, f);
+	 for (int i = 0; i < p2; i++)
+		Print(img,box[i]); 	 
+	
 	 free(histo);
 	 free(box);
-	 free(p);
-	 //free(histoV);
-	 //free(f);
 	 SDL_SaveBMP(img,"modif.bmp");
-	 SDL_FreeSurface(img);  
+	 SDL_FreeSurface(img);
 	 SDL_Quit();                         
 	 return 0; 
 }  

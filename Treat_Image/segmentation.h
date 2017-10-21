@@ -11,9 +11,12 @@
 typedef struct Coord Coord;
 struct Coord 
 {
-	int x;
+	//coord 
+	int x; 
 	int y;
-	int z;
+	//size 
+	int w;
+	int h;
 };
 
 typedef struct CoordBlock CoordBlock;
@@ -24,15 +27,16 @@ struct CoordBlock
 	int w;
 	int h;
 	int* nextBlock;
-}
-/*
- * Coord coordonnees;
- * coordonnees.x = 7; 
- */
+};
+
+typedef void(*funct_t)(Coord);
+
 void Polish(SDL_Surface *img, int l);
-void HHisto(SDL_Surface *img, int be, int h, int w, int *histo, int *p);
-void FindLines(SDL_Surface *img, Coord *box);
-void List2Struct(int *histo, Coord *box, int *p, int size);
-void VHisto(SDL_Surface *img, int be, int h, int w, int *histo , int *p);
-//void F(SDL_Surface *img, int *histoV, int x, int y, int z, int *p);
+void ToEvery(funct_t fonct, Coord *box, int end);
+int HHisto(SDL_Surface *img, Coord *histo, Coord box,int p);
+int List2StructLine(Coord *histo, Coord *box, int p);
+void Print(SDL_Surface *img, Coord box);
+int VHisto(SDL_Surface *img, Coord *histo, Coord box , int p);
+int List2StructChar(Coord *histo, Coord *box, int p);
+
 #endif
