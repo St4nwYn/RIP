@@ -1,0 +1,151 @@
+#include "treat_image.h"
+#include "segmentation.h"
+#include "pretreat.h"
+#include "pixel_operations.h"
+#include "Matrix.h"
+
+void wait_for_keypressed(void) {
+  SDL_Event             event;
+  // Infinite loop, waiting for event
+  for (;;) {
+    // Take an event
+    SDL_PollEvent( &event );
+    // Switch on event type
+    switch (event.type) {
+    // Someone pressed a key -> leave the function
+    case SDL_KEYDOWN: return;
+    default: break;
+    }
+  // Loop until we got the expected event
+  }
+}
+
+SDL_Surface* Load_Image(char *path) {
+  SDL_Surface          *img;
+  // Load an image using SDL_image with format detection
+  img = IMG_Load(path);
+  if (!img)
+    // If it fails, die with an error message
+    errx(3, "can't load %s: %s", path, IMG_GetError());
+  return img;
+}
+
+SDL_Surface* display_image(SDL_Surface *img) {
+  SDL_Surface          *screen;
+  // Set the window to the same size as the image
+  screen = SDL_SetVideoMode(img->w, img->h, 0, SDL_SWSURFACE);
+
+  if ( screen == NULL )
+  {
+    // error management
+    errx(1, "Couldn't set %dx%d video mode: %s\n",
+         img->w, img->h, SDL_GetError());
+  }
+
+  /* Blit onto the screen surface */
+  if(SDL_BlitSurface(img, NULL, screen, NULL) < 0)
+    warnx("BlitSurface error: %s\n", SDL_GetError());
+
+  // Update the screen
+  SDL_UpdateRect(screen, 0, 0, img->w, img->h);
+
+  // wait for a key
+  wait_for_keypressed();
+
+  // return the screen for further uses
+  return screen;
+
+}
+
+int main(int argc, char* argv[])
+{
+	//First = check the entry
+	SDL_Init(SDL_INIT_VIDEO);
+	 if (argc>2)
+		 errx(1,"Too many arguments given.");
+	 if (argc<2)
+	  	 errx(1,"Not enough arguments given.");
+
+	 SDL_Surface *img;
+
+	 //Pretreat
+	 img = Load_Image(argv[1]);
+	 //display_image(img);
+	 ToGrayScale(img);
+	 Binarize(img);
+	 SDL_SaveBMP(img,"Binarized.bmp");
+   
+	 img = IMG_Load(argv[1]);
+	 //Smooth
+	 int *leftM = calloc(1,sizeof(int));
+	 int *rightM = calloc(1,sizeof(int));
+	 *leftM = 0;
+	 *rightM = 0;
+	 Polish(img, 30,leftM,rightM);
+	 //display_image(img);
+	 PolishH(img, 30,leftM,rightM);
+	 //display_image(img);
+	 SDL_SaveBMP(img,"Polished.bmp");
+	 img = IMG_Load(argv[1]);
+
+	 //Rect
+	 Coord *box = calloc(img -> h, sizeof(Coord));
+	 box[0].x = 0;
+	 box[0].y = 0;
+	 box[0].w = (img -> w);
+	 box[0].h = (img -> h);
+
+
+	 //LineBlocks
+	 Coord *histo = calloc(img -> h, sizeof(Coord));
+	 int p = 0;
+	 	//Step1
+	 p = HHisto(img,histo,box[0],p);
+	 	//Step2
+	 p = List2StructLine(histo,box,p);
+	 for(int i = 0; i < p; i++)
+	 	 Print(img,box[i]);
+	 //display_image(img);
+	 free(histo);
+	 SDL_SaveBMP(img,"Lines.bmp");
+	 img = IMG_Load(argv[1]);
+
+	 //CharBlocks
+	 histo = calloc((img -> w) * (img -> h), sizeof(Coord));
+	 int p2 = 0;
+  	 for (int i = 0; i < p; i++)
+		 p2 = VHisto(img,histo,box[i],p2);
+	 p = 0;
+	 box = calloc((img -> h) * (img -> w), sizeof(Coord));
+	 p2 = List2StructChar(histo,box,p2);
+
+	 for (size_t i = 0; i < 1; i ++)	   
+	 {
+	   Uint32 pixel;
+	   Uint8 r,g,b;
+	   size_t lines = (size_t)box[i].h;
+	   size_t cols = (size_t)box[i].w;
+	   printf("x = %d, y = %d, h = %d, w = %d\n\n",box[i].x,box[i].y,box[i].h,box[i].w);
+	   struct Matrix *mat = initMatrix(lines,cols,initList(lines,cols));
+	   for(size_t j = box[i].y;j<box[i].y+lines;j++)
+	     for(size_t k = box[i].x;k<box[i].x+cols;k++)
+	       {
+		 pixel = getpixel(img,j,k);
+		 SDL_GetRGB(pixel,img->format, &r, &g, &b);
+		 if (r == 255)
+		   mat->values[(size_t)(j-box[i].y)][(size_t)(k-box[i].x)] = 1;//get pixel[j][k]
+		 else
+		   mat->values[(size_t)(j-box[i].y)][(size_t)(k-box[i].x)] = 0;
+	       }
+	  printMatrix(mat);
+	 }
+	 //	Print(img,box[i]);
+	 //display_image(img);
+	 //end
+	 free(histo);
+	 free(box);
+	 SDL_SaveBMP(img,"Char.bmp");
+	 SDL_FreeSurface(img);
+	 SDL_Quit();
+	 return 0;
+}
