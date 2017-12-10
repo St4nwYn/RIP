@@ -56,36 +56,6 @@ SDL_Surface* display_image(SDL_Surface *img) {
   return screen;
 
 }
-struct Matrix *edges(struct Matrix *mat)
-{
-  int f = 0;
-  size_t k = 0;
-  struct Matrix *ret = initMatrix(mat -> lines, mat -> cols,initList(mat -> lines, mat -> cols));
-  for(size_t i =0; i<mat -> lines;i++)
-    for(size_t j = 0; j<mat -> cols;j++)
-      ret->values[i][j] = 1;
-    for(size_t i = 0; i < mat -> lines; i++)
-    {
-      f = 0;      
-      for(size_t j = 0; j < mat -> cols; j++)
-	{
-	  if(f == 0 && mat -> values[i][j] == 0)
-	    {
-	      k = j;
-	      while(k < mat -> cols && mat -> values[i][k] == 0)
-		{
-		  f++;
-		  k++;
-		} 
-	      f = f / 2;
-	      printf("f = %d \n",f);
-	      for(size_t a = j;a < mat -> cols && a < j + f; a++)
-		ret -> values[i][a] = 0;
-	    }
-	}
-    }
-    return ret;
-}
 struct Matrix *sklt(struct Matrix *mat)
 {
   int o = 1;
@@ -136,8 +106,8 @@ struct Matrix *applysklt(struct Matrix *mat)
 }
 struct Matrix *rogne(struct Matrix *mat)
 {
-  struct Matrix *ret = initMatrix(16, 16,initList(16,16));
-  for(size_t i =0; i<16;i++)
+  struct Matrix *ret = initMatrix(32, 16,initList(32,16));
+  for(size_t i =0; i<32;i++)
     for(size_t j = 0; j<16;j++)
       ret->values[i][j] = 1;
     
@@ -147,54 +117,56 @@ struct Matrix *rogne(struct Matrix *mat)
   size_t endj;
   size_t r;
   size_t t;
-  /* if (mat -> lines >= 16 && mat -> cols >= 16)
+  if (mat -> lines >= 32 && mat -> cols >= 16)
     {
-      initi = (mat -> lines - 16)/2;
-      endi = mat -> lines - initi;
-      initj = (mat -> cols - 16)/2;
-      endj = mat -> cols - initj;
-      r = 0;
-      t = 0;
-      for(size_t i = initi; i < endi; i++, r++)
+      printf("PERFECT\n");
+      initi = 0;
+      endi = mat -> lines;
+      initj = 0;
+      endj = mat -> cols;
+      r = (32 - mat -> lines)/2;
+      t = (24 - mat -> cols)/2;
+      for(size_t i = initi; i < endi && r < 32; i++, r++)
 	{
 	  t = 0; 
-	  for(size_t j = initj; j < endj; j++, t++)
+	  for(size_t j = initj; j < endj && t < 16; j++, t++)
 	ret -> values[r][t] = mat -> values[i][j];
 	}
     }
-  else if(mat -> lines < 16)
+  else if(mat -> lines < 32)
     {
-      r = (16 - mat -> lines)/2;
-      t =0;
+      printf("PERF\n");
+      r = (32 - mat -> lines)/2;
+      t = (16 - mat -> cols)/2;
       initi = 0;
       endi = mat -> lines;
-      initj = (mat -> cols - 16)/2;
-      endj = mat -> cols - initj;
-      for(size_t i = initi; i < endi; i++, r++)
+      initj = 0;
+      endj = mat -> cols;
+      for(size_t i = initi; i < endi && r < 32; i++, r++)
 	{
-	  t = 0; 
-	  for(size_t j = initj; j < endj; j++, t++)
+	  t = (16 - mat -> cols)/2;
+	  for(size_t j = initj; j < endj && t < 16; j++, t++)
 	    ret -> values[r][t] = mat -> values[i][j];
 	}
     }
   else
-  {*/
-  //printf("lines = %lu,cols = %lu",mat->lines, mat->cols);
-  r = 0;
-  t = (16 - mat -> cols)/2;
-  initi = (mat -> lines - 16)/2;
-  endi = mat -> lines - initi;
-  initj = 0;
-  endj = mat -> cols;
-  for(size_t i = initi; i < endi && r<16; i++, r++)
-  {
-    t = (16 - mat -> cols)/2; 
-     for(size_t j = initj; j < endj; j++, t++)
     {
-       ret -> values[r][t] = mat -> values[i][j];
+      printf("FECT\n");
+      r = (32 - mat -> lines)/2;
+      t = (16 - mat -> cols)/2;
+      initi = 0;
+      endi = mat -> lines;
+      initj = 0;
+      endj = mat -> cols;
+      for(size_t i = initi; i < endi && r < 32; i++, r++)
+	{
+	  t = (16 - mat -> cols)/2; 
+	  for(size_t j = initj; j < endj && t < 16; j++, t++)
+	    {
+	      ret -> values[r][t] = mat -> values[i][j];
+	    }
+	}
     }
-  }
-  //   }
   return ret;
 }
 /*
@@ -387,9 +359,9 @@ int main(int argc, char* argv[])
 	 for(int i =0; i<p2;i++)
 	   Print(img,box[i]);
 
-	 for (size_t i = 0; i <2;i++)	   
+	 for (size_t i = 0; i < (size_t)p2;i++)	   
 	 {
-	   printf("%lu\n",i);
+	   printf("%u\n",i);
 	   Uint32 pixel;
 	   Uint8 r,g,b;
 	   box[i].w++;
@@ -415,9 +387,7 @@ int main(int argc, char* argv[])
 	   mat = applysklt(mat);
 	   printMatrix(mat);
 	   printf("\n");
-	   mat = edges(mat);
-	   printMatrix(mat);
-	   printf("\n");
+	   
 	 }
 	 //display_image(img);
 	 //end
