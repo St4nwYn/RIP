@@ -5,8 +5,7 @@ void Mat2File(char *path, double **mat, size_t lines, size_t cols)
 {
 	FILE *file;
 	file = fopen(path, "w+");
-	//fputs("CACA BOUDIN PIPI\n",file);
-	
+	fprintf(file, "%u %u\n",lines,cols);
 	for(size_t i=0; i<lines;i++)
 	{
 		for(size_t j=0;j<cols;j++)
@@ -14,6 +13,11 @@ void Mat2File(char *path, double **mat, size_t lines, size_t cols)
 		fputc('\n',file);
 	}
 	fclose(file);	
+}
+
+double **File2Mat(char *path)
+{
+	
 }
 
 int main()
