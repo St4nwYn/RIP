@@ -75,39 +75,26 @@ double todec(char *bin)
 	}
 	while(bin[i] && bin[i]!=',')
 		i++;
-	
+
+	int cpt;
+	//nb decimal
 	if (bin[i])
 	{
-		size_t coma = i-1;
-		int cpt = 0;
-		for(;coma>0;coma--,cpt++)
-		{
-			if(bin[coma]=='1')
-				out+= pow(2,cpt);
-		}
-		if(bin[coma]=='1')
-			out+=pow(2,cpt);
-
-		coma = i+1;
-		cpt = -1;
-		for(;bin[coma];coma++,cpt--)
-		{
-			if(bin[coma]=='1')
-				out+=pow(2,cpt);
-		}
+	  size_t coma = i+1;
+	  cpt = -1;
+	  for(;bin[coma];coma++,cpt--)
+	    if(bin[coma]=='1')
+	      out+=pow(2,cpt);
 	}
-	else
-	{
-		i--;
-		size_t cpt =0;
-		for(;i>0;i--,cpt++)
-    {
-      if(bin[i]=='1')
-        out+= pow(2,cpt);
-    }
-		if(bin[i]=='1')
-      out+=pow(2,cpt);
-	}
+	i--;
+        cpt = 0;
+	for(;i>0;i--,cpt++)
+	  if(bin[i]=='1')
+	    out+= pow(2,cpt);
+	
+	if(bin[i]=='1')
+	  out+=pow(2,cpt);
+       
 	if (neg==1)
 		out*=-1;
 	return out;
@@ -156,7 +143,7 @@ double **File2Mat(char *path)
 		for(size_t j =0; j<cols;j++)
 		{
 			fscanf(file,"%s",chain);
-			out[i][j] = (size_t)todec(chain);
+			out[i][j] = todec(chain);
 		}
 	}
 

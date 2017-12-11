@@ -26,5 +26,5 @@ void printNeuron(struct Neuron *N);
 void printMatrix(struct Neuron ***N,size_t lines, size_t cols);
 void initElm(struct Network *NN);
 int learning(struct Network *NN, double step);
-
+void forward(struct Network *NN, size_t e);
 #endif

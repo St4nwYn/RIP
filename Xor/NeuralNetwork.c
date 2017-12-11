@@ -1,5 +1,5 @@
 #include "NeuralNetwork.h"
-
+#include "Save.h"
 
 double randint()
 {
@@ -120,12 +120,16 @@ void initElm(struct Network *NN)
   //init input
   NN->inputL[1][1]->value = NN->inputL[2][0]->value = NN->inputL[3][0]->value = NN->inputL[3][1]->value = 1;
   
+  NN->inputL[0][0]->weights=File2Mat("xor/I1.txt")[0];
+  NN->inputL[0][1]->weights=File2Mat("xor/I2.txt")[0];/*
   for(size_t i = 0; i<NN->nbh;i++)
     {
       NN->inputL[0][0]->weights[i] = randint();
       NN->inputL[0][1]->weights[i] = randint();
-    }
+    }*/
   
+ 
+
   for(size_t i = 1; i<NN->nbex;i++)
     for(size_t j = 0; j<NN->nbi;j++)
       NN->inputL[i][j]->weights = NN->inputL[0][j]->weights;
@@ -134,15 +138,21 @@ void initElm(struct Network *NN)
   NN->EoutputL[1][0]->value = NN->EoutputL[2][0]->value = 1;
   
   //init hidden
+  /*
   for(size_t i = 0; i<NN->nbh;i++)
     for(size_t j = 0; j<NN->nbo;j++)
       NN->hiddenL[i]->weights[j] = randint();	
+  */
+  NN->hiddenL[0]->weights=File2Mat("xor/H1.txt")[0];
+  NN->hiddenL[1]->weights=File2Mat("xor/H2.txt")[0];
+
 }
 
 void forward(struct Network *NN, size_t e)
 {
   struct Neuron *cur;
   struct Neuron *prev;
+  
   for(size_t i =0; i<NN->nbh;i++)
     {
       cur = NN->hiddenL[i];
@@ -164,6 +174,7 @@ void forward(struct Network *NN, size_t e)
 	}
       cur->value = sigmoid(cur->value);
     }
+  
 }
 
 void backward(struct Network *NN, size_t e)
@@ -280,4 +291,19 @@ int learning(struct Network *NN, double step)
   while(diff>0.1);
   printf("iter = %d \n",k);
   return 1;
+}
+
+size_t higher(double *list, size_t size)
+{
+  size_t s = 0;
+  double m = list[0];
+  for(size_t i = 0; i < size; i++)
+    {
+      if(list[i] > m)
+	{
+	  m = list[i];
+	  s = i;
+	}
+    }
+  return s;
 }
