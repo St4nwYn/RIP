@@ -144,7 +144,7 @@ void initElm(struct Network *NN, char* path)
 }
 
 void initWeights(struct Network *NN, char *path, char mode)
-{
+{/*
 	if (mode == 'r')
 	{
 		size_t len = strlen(path);
@@ -165,7 +165,7 @@ void initWeights(struct Network *NN, char *path, char mode)
 	}
 
 	else
-	{
+	{*/
 		for(size_t i = 0; i<NN->nbh;i++)
     {
      	NN->inputL[0][0]->weights[i] = randint();
@@ -180,10 +180,9 @@ void initWeights(struct Network *NN, char *path, char mode)
  	 	for(size_t i = 0; i<NN->nbh;i++)
     	for(size_t j = 0; j<NN->nbo;j++)
       	NN->hiddenL[i]->weights[j] = randint();	
-	}
+	
 }
 
-void initWeights(struct Network *NN, char *path);
 
 void forward(struct Network *NN, size_t e)
 {
