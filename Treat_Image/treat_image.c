@@ -179,7 +179,7 @@ struct Matrix *rogne(struct Matrix *mat)
 */
 void preTreat(SDL_Surface *img)
 {
-	ToGrayScale(img);
+  ToGrayScale(img);
   Binarize(img);
   SDL_SaveBMP(img,"binarize.bmp");
 }
@@ -302,7 +302,7 @@ void init(char* path)
 	SDL_Quit();
 }
 
-int main(int argc, char* argv[])                                                
+/*int main(int argc, char* argv[])                                                
 {
   if (argc>2)
     errx(1,"Too many arguments given.");
@@ -312,35 +312,9 @@ int main(int argc, char* argv[])
 	 init(argv[1]);
 	 return 0; 
 
-}
-/*
-void SegmentationForInterface(SDL_Surface *img)                 {
-	//First = check the entry    
-	SDL_Init(SDL_INIT_VIDEO);                                                   
-	 if (argc>2)                    
-		 errx(1,"Too many arguments given.");
-	 if (argc<2) 
-	  	 errx(1,"Not enough arguments given.");                             
-	 
-	 SDL_Surface *img;
-	 //Pretreat
-	 img = Load_Image(argv[1]);	 
-	 ToGrayScale(img);
-	 Binarize(img);
-	 SDL_SaveBMP(img,"binarize.bmp");
-	 SDL_FreeSurface(img);  
-	 
-	 //Lissage
-	 
-	 int *margeD = calloc(1,sizeof(int));
-	 int *margeG = calloc(1,sizeof(int));
-	 *margeD = 0;
-	 *margeG = 0;
-	 img = Load_Image("binarize.bmp");
-	 Polish(img, 30,margeG,margeD);
-	 PolishH(img, 30,margeG,margeD);	 
-	 //display_image(img);
+}*/
 
+void SegmentationForInterface(SDL_Surface *img)                 {
 	 //Rect
 	 Coord *box = calloc(img -> h, sizeof(Coord));
 	 box[0].x = 0;
@@ -380,10 +354,4 @@ void SegmentationForInterface(SDL_Surface *img)                 {
 	 free(histo);
 	 free(box);
 
- SDL_SaveBMP(img,"modif.bmp");
-	 SDL_FreeSurface(img);
-	 SDL_Quit();
-	 
-	 return 0; 
-
-} */ 
+}  
