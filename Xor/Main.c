@@ -2,10 +2,17 @@
 
 void xor()
 {
-	struct Network *NN = initNetwork(4,2,2,1);
+  struct Network *NN = initNetwork(4,2,2,1);
   initElm(NN);
-  learning(NN,1);
-	/*
+  int i =0;
+  while (learning(NN,0.49)!=1)
+    {
+      initElm(NN);
+      i++;
+    }
+  printf("\nNB OF CALLS : %d\n", i);
+  
+  /*
   for(size_t i = 0; i<NN->nbex;i++)
     for(size_t j =0; j<NN->nbo;j++)
     {
