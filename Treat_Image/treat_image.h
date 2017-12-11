@@ -7,15 +7,14 @@
 # include <SDL/SDL.h>
 # include <SDL/SDL_image.h>
 # include <err.h>
-<<<<<<< HEAD
 
+struct Matrix
+{
+	double **values;
+	size_t lines, cols;
 
-
-=======
-//# include "Matrix.h"
-
-void SegmentationForInterface(SDL_Surface *img);
->>>>>>> 9cbcd5f2e92678ceda679073bb1aebec88f85f80
+};
+//void SegmentationForInterface(SDL_Surface *img);
 void wait_for_keypressed(void);
 //struct Matrix *rogne(struct Matrix *mat)
 //struct Matrix *applysklt(struct Matrix *mat)
