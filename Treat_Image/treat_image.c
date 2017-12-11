@@ -59,7 +59,7 @@ SDL_Surface* display_image(SDL_Surface *img) {
 
 }
 
-struct Matrix *sklt(struct Matrix *mat)
+/*struct Matrix *sklt(struct Matrix *mat)
 {
   int o = 1;
   struct Matrix *ret = initMatrix(mat -> lines, mat -> cols,initList(mat -> lines, mat -> cols));
@@ -168,12 +168,11 @@ struct Matrix *rogne(struct Matrix *mat)
 	}
     }
   return ret;
-}
+}*/
 
-int main(int argc, char* argv[])                                                
-{
+void SegmentationForInterface(SDL_Surface *img)                 {
 	//First = check the entry    
-	SDL_Init(SDL_INIT_VIDEO);                                                   
+	/*SDL_Init(SDL_INIT_VIDEO);                                                   
 	 if (argc>2)                    
 		 errx(1,"Too many arguments given.");
 	 if (argc<2) 
@@ -196,8 +195,8 @@ int main(int argc, char* argv[])
 	 img = Load_Image("binarize.bmp");
 	 Polish(img, 30,margeG,margeD);
 	 PolishH(img, 30,margeG,margeD);	 
-	 //display_image(img);
-	 /*
+	 //display_image(img);*/
+
 	 //Rect
 	 Coord *box = calloc(img -> h, sizeof(Coord));
 	 box[0].x = 0;
@@ -235,10 +234,11 @@ int main(int argc, char* argv[])
 		Print(img,box[i]); 	 
 	
 	 free(histo);
-	 free(box);*/
-	 SDL_SaveBMP(img,"modif.bmp");
+	 free(box);
+
+	/* SDL_SaveBMP(img,"modif.bmp");
 	 SDL_FreeSurface(img);
 	 SDL_Quit();
 	 
-	 return 0; 
+	 return 0;*/ 
 }  
