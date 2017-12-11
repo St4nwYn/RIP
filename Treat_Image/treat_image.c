@@ -180,7 +180,7 @@ struct Matrix *rogne(struct Matrix *mat)
 
 void preTreat(SDL_Surface *img)
 {
-	ToGrayScale(img);
+  ToGrayScale(img);
   Binarize(img);
   SDL_SaveBMP(img,"binarize.bmp");
 }
@@ -314,8 +314,13 @@ void init(char* path)
 	SDL_FreeSurface(img);
 	SDL_Quit();
 }
+<<<<<<< HEAD
 /*
 int main(int argc, char* argv[])                                                
+=======
+
+/*int main(int argc, char* argv[])                                                
+>>>>>>> 7ea797b797215617f989c22c599b4cd3c8623029
 {
   if (argc>2)
     errx(1,"Too many arguments given.");
@@ -325,6 +330,7 @@ int main(int argc, char* argv[])
 	 init(argv[1]);
 	 return 0; 
 
+<<<<<<< HEAD
 }
 */
 void SegmentationForInterface(SDL_Surface *img)                 {
@@ -353,7 +359,11 @@ void SegmentationForInterface(SDL_Surface *img)                 {
 	 Polish(img, 30,margeG,margeD);
 	 PolishH(img, 30,margeG,margeD);	 
 	 //display_image(img);
+=======
+}*/
+>>>>>>> 7ea797b797215617f989c22c599b4cd3c8623029
 
+void SegmentationForInterface(SDL_Surface *img)                 {
 	 //Rect
 	 Coord *box = calloc(img -> h, sizeof(Coord));
 	 box[0].x = 0;
@@ -393,6 +403,7 @@ void SegmentationForInterface(SDL_Surface *img)                 {
 	 free(histo);
 	 free(box);
 
+<<<<<<< HEAD
  SDL_SaveBMP(img,"modif.bmp");
 	 SDL_FreeSurface(img);
 	 SDL_Quit();
@@ -400,3 +411,6 @@ void SegmentationForInterface(SDL_Surface *img)                 {
 	 return 0; 
 
 } 
+=======
+}  
+>>>>>>> 7ea797b797215617f989c22c599b4cd3c8623029
