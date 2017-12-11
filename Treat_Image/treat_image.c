@@ -255,6 +255,7 @@ double **box2mat(SDL_Surface *img, struct Tuplebox *tuple)
 	for(int k = 0;(size_t)k<tuple->len; k++)
 	{
 		box = tuple->box[k];
+		printf("x = %d,y = %d, h =  %d, w = %d\n",box.x,box.y,box.h,box.w);
 		box.h++;
   	box.w++;
 		out[k] = calloc(box.w * box.h,sizeof(double));
