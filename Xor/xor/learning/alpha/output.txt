@@ -3,9 +3,9 @@ struct Matrix idA()
 {
 	struct Matrix id = malloc(sizeof(struct Matrix));
 	size_t o=0;
-	for(size_t i = 0; i < 56; i++)
+	for(size_t i = 0; i < 52; i++)
 	{	
-		for(size_t j = 0; j < 56; j++)
+		for(size_t j = 0; j < 52; j++)
 		{
 			if (j == o)
 				id[i][j] = 0;
