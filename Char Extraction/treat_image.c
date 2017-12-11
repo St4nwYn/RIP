@@ -119,7 +119,6 @@ struct Matrix *rogne(struct Matrix *mat)
   size_t t;
   if (mat -> lines >= 32 && mat -> cols >= 16)
     {
-      printf("PERFECT\n");
       initi = 0;
       endi = mat -> lines;
       initj = 0;
@@ -135,7 +134,6 @@ struct Matrix *rogne(struct Matrix *mat)
     }
   else if(mat -> lines < 32)
     {
-      printf("PERF\n");
       r = (32 - mat -> lines)/2;
       t = (16 - mat -> cols)/2;
       initi = 0;
@@ -151,7 +149,6 @@ struct Matrix *rogne(struct Matrix *mat)
     }
   else
     {
-      printf("FECT\n");
       r = (32 - mat -> lines)/2;
       t = (16 - mat -> cols)/2;
       initi = 0;
