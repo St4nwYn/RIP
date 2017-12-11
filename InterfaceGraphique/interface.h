@@ -1,3 +1,6 @@
+#ifndef INTERFACE_H_
+#define INTERFACE_H_
+
 #include <gtk/gtk.h>
 #include <glib.h>
 #include <stdio.h>
@@ -20,3 +23,4 @@ G_MODULE_EXPORT void on_Open_activate();
 G_MODULE_EXPORT void on_Save_activate();
 G_MODULE_EXPORT void on_About_activate();
 
+#endif

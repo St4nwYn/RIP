@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.20.0 -->
+<!-- Generated with glade 3.20.2 -->
 <interface>
   <requires lib="gtk+" version="3.20"/>
   <object class="GtkWindow" id="MainWindow">
@@ -191,7 +191,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="pixel_size">442</property>
-                    <property name="icon_name">image-missing</property>
+                    <property name="icon_name">image-x-generic</property>
                   </object>
                   <packing>
                     <property name="tab_expand">True</property>
@@ -242,6 +242,9 @@
           </packing>
         </child>
       </object>
+    </child>
+    <child type="titlebar">
+      <placeholder/>
     </child>
   </object>
   <object class="GtkAboutDialog" id="AboutDialog">
@@ -305,10 +308,14 @@
         </child>
       </object>
     </child>
+    <child>
+      <placeholder/>
+    </child>
   </object>
   <object class="GtkFileChooserDialog">
     <property name="can_focus">False</property>
     <property name="type_hint">dialog</property>
+    <property name="transient_for">MainWindow</property>
     <property name="do_overwrite_confirmation">True</property>
     <property name="show_hidden">True</property>
     <child internal-child="vbox">
@@ -359,6 +366,9 @@
           <placeholder/>
         </child>
       </object>
+    </child>
+    <child>
+      <placeholder/>
     </child>
   </object>
 </interface>
