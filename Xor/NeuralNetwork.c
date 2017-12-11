@@ -1,3 +1,4 @@
+#include <string.h>
 #include "NeuralNetwork.h"
 #include "Save.h"
 
@@ -113,40 +114,76 @@ double sigmoid(double x)
   return 1/(1+exp(-x));
 }
 
-
-void initElm(struct Network *NN)
+//init input output alea w
+void initElm(struct Network *NN, char* path)
 {
   srand(time(NULL));
-  //init input
-  NN->inputL[1][1]->value = NN->inputL[2][0]->value = NN->inputL[3][0]->value = NN->inputL[3][1]->value = 1;
   
-  NN->inputL[0][0]->weights=File2Mat("xor/I1.txt")[0];
-  NN->inputL[0][1]->weights=File2Mat("xor/I2.txt")[0];/*
-  for(size_t i = 0; i<NN->nbh;i++)
-    {
-      NN->inputL[0][0]->weights[i] = randint();
-      NN->inputL[0][1]->weights[i] = randint();
-    }*/
-  
- 
+	//init inputs & outputs
+	size_t len = strlen(path);
+	//char in[len+12];	
+	char *in = calloc(len+10,sizeof(char));
+	strcat(in,path);
+	strcat(in,"input.txt");
+  double **input = File2Mat(in);
+	free(in);
+	
+	char *out = calloc(len+11,sizeof(char));          
+  strcat(out,path);
+  strcat(out,"output.txt");
 
-  for(size_t i = 1; i<NN->nbex;i++)
-    for(size_t j = 0; j<NN->nbi;j++)
-      NN->inputL[i][j]->weights = NN->inputL[0][j]->weights;
-  
-  //init expected output
-  NN->EoutputL[1][0]->value = NN->EoutputL[2][0]->value = 1;
-  
-  //init hidden
-  /*
-  for(size_t i = 0; i<NN->nbh;i++)
-    for(size_t j = 0; j<NN->nbo;j++)
-      NN->hiddenL[i]->weights[j] = randint();	
-  */
-  NN->hiddenL[0]->weights=File2Mat("xor/H1.txt")[0];
-  NN->hiddenL[1]->weights=File2Mat("xor/H2.txt")[0];
-
+	double **output = File2Mat(out);
+	free(out);
+	for (size_t i = 0; i<NN->nbex;i++)
+	{
+		for(size_t j = 0; j<NN->nbi;j++)
+			NN->inputL[i][j]->value= input[i][j];
+		for(size_t j = 0; j<NN->nbo;j++)
+			NN->EoutputL[i][j]->value = output[i][j];
+	}
 }
+
+void initWeights(struct Network *NN, char *path, char mode)
+{
+	if (mode == 'r')
+	{
+		size_t len = strlen(path);
+		char *file = calloc(len+11,sizeof(char));
+ 		strcat(file,path);
+		strcat(file,"In.txt");
+		//file[len+2] = '\0';
+		for(size_t i =0; i<NN->nbi;i++)
+		{
+			//NN->inutL[0][i]->weights=File2Mat(file)[0];
+  	}
+		NN->inputL[0][1]->weights=File2Mat("xor/I2.txt")[0];
+ 	
+	
+  	NN->hiddenL[0]->weights=File2Mat("xor/H1.txt")[0];
+  	NN->hiddenL[1]->weights=File2Mat("xor/H2.txt")[0];
+ 		free(file); 
+	}
+
+	else
+	{
+		for(size_t i = 0; i<NN->nbh;i++)
+    {
+     	NN->inputL[0][0]->weights[i] = randint();
+     	NN->inputL[0][1]->weights[i] = randint();
+    }
+  
+   	for(size_t i = 1; i<NN->nbex;i++)
+    	for(size_t j = 0; j<NN->nbi;j++)
+      	NN->inputL[i][j]->weights = NN->inputL[0][j]->weights;
+  
+  
+ 	 	for(size_t i = 0; i<NN->nbh;i++)
+    	for(size_t j = 0; j<NN->nbo;j++)
+      	NN->hiddenL[i]->weights[j] = randint();	
+	}
+}
+
+void initWeights(struct Network *NN, char *path);
 
 void forward(struct Network *NN, size_t e)
 {
