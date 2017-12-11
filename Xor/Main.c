@@ -54,49 +54,21 @@ void keepGoodW(struct Network *NN, char *path)
 
 void xor(char mode)
 {
-<<<<<<< HEAD
   int i =0;
   struct Network *NN = initNetwork(4,2,2,1);
   initElm(NN,"xor/");
   initWeights(NN,"xor/",mode);
   if(mode == 'r')
     {
-      for(size_t i = 0; i < NN -> nbex; i++ )
-	forward(NN,i);
+      for(size_t j = 0; j < NN -> nbex; j++ )
+	forward(NN,j);
     }
   else
     {
       while (learning(NN,0.49)!=1)
-=======
-	struct Network *NN = initNetwork(4,2,2,1);
-	initElm(NN, "xor/");
-	initWeights(NN,"xor/",mode);
-
-
-
-	int i =0;
-	learning(NN,0.49);
-  	//printf("\nNB OF CALLS : %d\n", i);
-  	//printMatrix(NN->outputL,4,1); 
-	while (learning(NN,0.49)!=1)
-    	{
-      	initElm(NN, "xor/");
-      	i++;
-    	}
-  	printf("\nNB OF CALLS : %d\n", i);
-  	printMatrix(NN->outputL,4,1);
-		
-
-
-
-	//printMatrix(NN->inputL,4,2);
-	
-	/*
-	if (mode == 'r')
->>>>>>> db8445670c620a182e7663fbcf5bccedd507742e
 	{
-	  initWeights(NN,"xor/",'w');
 	  i++;
+	  initWeights(NN,"xor/",mode);
 	}
       keepGoodW(NN, "xor/");
     }
