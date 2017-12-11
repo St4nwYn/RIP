@@ -238,6 +238,7 @@ int main(int argc, char* argv[])
 	 free(box);*/
 	 SDL_SaveBMP(img,"modif.bmp");
 	 SDL_FreeSurface(img);
-	 SDL_Quit();                         
+	 SDL_Quit();
+	 
 	 return 0; 
 }  
