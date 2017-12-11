@@ -114,9 +114,9 @@ struct Matrix *applysklt(struct Matrix *mat)
 }
 struct Matrix *rogne(struct Matrix *mat)
 {
-  struct Matrix *ret = initMatrix(32, 16,initList(32,16));
+  struct Matrix *ret = initMatrix(32, 24,initList(32,24));
   for(size_t i =0; i<32;i++)
-    for(size_t j = 0; j<16;j++)
+    for(size_t j = 0; j<24;j++)
       ret->values[i][j] = 1;
     
   size_t initi;
@@ -125,7 +125,7 @@ struct Matrix *rogne(struct Matrix *mat)
   size_t endj;
   size_t r;
   size_t t;
-  if (mat -> lines >= 32 && mat -> cols >= 16)
+  if (mat -> lines >= 32 && mat -> cols >= 24)
     {
       initi = 0;
       endi = mat -> lines;
@@ -136,37 +136,37 @@ struct Matrix *rogne(struct Matrix *mat)
       for(size_t i = initi; i < endi && r < 32; i++, r++)
 	{
 	  t = 0; 
-	  for(size_t j = initj; j < endj && t < 16; j++, t++)
+	  for(size_t j = initj; j < endj && t < 24; j++, t++)
 	ret -> values[r][t] = mat -> values[i][j];
 	}
     }
   else if(mat -> lines < 32)
     {
       r = (32 - mat -> lines)/2;
-      t = (16 - mat -> cols)/2;
+      t = (24 - mat -> cols)/2;
       initi = 0;
       endi = mat -> lines;
       initj = 0;
       endj = mat -> cols;
       for(size_t i = initi; i < endi && r < 32; i++, r++)
 	{
-	  t = (16 - mat -> cols)/2;
-	  for(size_t j = initj; j < endj && t < 16; j++, t++)
+	  t = (24 - mat -> cols)/2;
+	  for(size_t j = initj; j < endj && t < 24; j++, t++)
 	    ret -> values[r][t] = mat -> values[i][j];
 	}
     }
   else
     {
       r = (32 - mat -> lines)/2;
-      t = (16 - mat -> cols)/2;
+      t = (24 - mat -> cols)/2;
       initi = 0;
       endi = mat -> lines;
       initj = 0;
       endj = mat -> cols;
       for(size_t i = initi; i < endi && r < 32; i++, r++)
 	{
-	  t = (16 - mat -> cols)/2; 
-	  for(size_t j = initj; j < endj && t < 16; j++, t++)
+	  t = (24 - mat -> cols)/2; 
+	  for(size_t j = initj; j < endj && t < 24; j++, t++)
 	    {
 	      ret -> values[r][t] = mat -> values[i][j];
 	    }
