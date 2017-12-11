@@ -4,44 +4,48 @@
 
 char *tobin(double x)
 {
+	int neg = 0;
+	int i = 0, j = 0;
+	char *out = calloc(255,sizeof(char));
 	char *ret = calloc(255,sizeof(char));
-	int j = 0;
+
 	if (x == 0 || x ==-0)
 		return "0";
 	
 	if (x<0)
 	{
 		x=-x;
-		ret[j]='2';
+		neg = 1;
 	}
-	
-	char *out = calloc(255,sizeof(char));	
+		
 	int y = (int)x;
+	if(y == 0)
+	{
+		out[j] = '0';
+		j++;
+	} 	
+
 	for(;y>0;y/=2,j++)
 	{
-		if((int)(y%2)==0)
+		if(y%2==0)
 			out[j] = '0';
 		else
 			out[j] = '1';
 	}
 
-	int i = 0;
-	if(ret[i]=='2')
+	if(neg==1)
 	{
-		i++;
-		for(;i<=j;i++)
-			ret[i] = out[j-i];
+		out[j]='2';
 		j++;
 	}
-
-	else
-		for(;i<j;i++)
-      ret[i] = out[j-i-1];
+	
+	for(;i<j;i++)
+	  ret[i] = out[j-i-1];
 
 //nb virgule
 	x-=(int)x;
 	if(y!=x)
-	{
+	{ 
 		ret[j]=',';
 		j++;
 		for(i = 0;i<6 && x!=0;j++,i++)
@@ -50,7 +54,7 @@ char *tobin(double x)
 			if (x>=1)
 			{
 				ret[j]='1';
-				x-=1;
+				x--;
 			}
 			else
 				ret[j]='0';

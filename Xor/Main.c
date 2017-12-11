@@ -1,4 +1,12 @@
 #include "NeuralNetwork.h"
+#include "Save.h"
+
+double **list2mat(double *list)
+{
+	double **out = calloc(1, sizeof(double*));
+	out[0] = list;
+	return out;
+}
 
 void xor()
 {
@@ -11,22 +19,12 @@ void xor()
       i++;
     }
   printf("\nNB OF CALLS : %d\n", i);
-  
-  /*
-  for(size_t i = 0; i<NN->nbex;i++)
-    for(size_t j =0; j<NN->nbo;j++)
-    {
-      if(NN->outputL[i][j]->value>=0.5)
-        NN->outputL[i][j]->value =1;
-      else
-        NN->outputL[i][j]->value = 0;
-  }*/
-  printMatrix(NN->outputL,NN->nbex,NN->nbo);
-  /*for(size_t i =0; i<NN->nbh;i++)
-  {
-    printNeuron(NN->hiddenL[i]);
-    printf("\n");
-  }*/
+	printMatrix(NN->outputL,4,1);  
+	Mat2File("xor/I1.txt",list2mat(NN->inputL[0][0]->weights),1,NN->nbh);
+	Mat2File("xor/I2.txt",list2mat(NN->inputL[0][1]->weights),1,NN->nbh);
+	Mat2File("xor/H1.txt",list2mat(NN->hiddenL[0]->weights),1,NN->nbo);
+	Mat2File("xor/H2.txt",list2mat(NN->hiddenL[1]->weights),1,NN->nbo);
+	
 }
 
 int main()
