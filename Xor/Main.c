@@ -13,8 +13,27 @@ void xor(char mode)
 {
 	struct Network *NN = initNetwork(4,2,2,1);
 	initElm(NN, "xor/");
-	printMatrix(NN->inputL,4,2);
-	printMatrix(NN->EoutputL,4,1);
+	initWeights(NN,"xor/",mode);
+
+
+
+	int i =0;
+	learning(NN,0.49);
+  	//printf("\nNB OF CALLS : %d\n", i);
+  	//printMatrix(NN->outputL,4,1); 
+	while (learning(NN,0.49)!=1)
+    	{
+      	initElm(NN, "xor/");
+      	i++;
+    	}
+  	printf("\nNB OF CALLS : %d\n", i);
+  	printMatrix(NN->outputL,4,1);
+		
+
+
+
+	//printMatrix(NN->inputL,4,2);
+	
 	/*
 	if (mode == 'r')
 	{
@@ -28,6 +47,6 @@ void xor(char mode)
 int main()
 {
 	
-  xor('r');
+  xor('w');
   return 0; 					
 }
