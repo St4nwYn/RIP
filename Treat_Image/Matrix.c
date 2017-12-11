@@ -1,0 +1,105 @@
+#include "Matrix.h"
+
+struct Matrix *initMatrix(size_t lines, size_t cols, double **values)
+{
+  struct Matrix *mat = malloc(sizeof(struct Matrix));
+  mat->lines = lines;
+  mat->cols = cols;
+  mat->values = values;
+  return mat;
+}
+
+double **initList(size_t lines, size_t cols)
+{
+	double **list = calloc(lines,sizeof(double*));
+	for(size_t i = 0; i<lines;i++)
+		list[i] = calloc(cols,sizeof(double));
+	return list;
+}
+
+void printMatrix(struct Matrix *mat)
+{
+  size_t cols = mat->cols;
+  for(size_t i = 0; i < mat->lines;i++)
+  {
+    printf("[ ");
+    for(size_t j = 0;j< cols;j++)
+      if(mat->values[i][j] == 1)
+	printf("  ");
+      else
+      	printf("%.0lf ",mat->values[i][j]);
+    printf("]\n");
+  }
+}
+
+void freeMatrix(struct Matrix *mat)
+{
+	for(size_t i =0; i<mat->lines;i++)
+		free(mat->values[i]);
+	free(mat->values);
+	free(mat);
+}
+
+struct Matrix *dotMatrix(struct Matrix *a, struct Matrix *b)
+{
+	double **av = a->values;
+	double **bv = b->values;
+	size_t cols = b->cols;
+	size_t lines = a->lines;
+
+	if (lines == 1 && b->lines ==1)
+	{
+		double **values= initList(1,1);
+		for(size_t i = 0;i<a->cols;i++)
+			values[0][0] += av[0][i] * bv[0][i];
+		return initMatrix(1,1,values);
+	} 
+	double **values = initList(lines,cols);
+	for(size_t i = 0; i<lines;i++)
+		for(size_t j = 0; j<cols;j++)
+			for(size_t k =0; k<a->cols;k++)
+				values[i][j] += av[i][k] * bv[k][j];
+	return initMatrix(lines,cols,values);
+}
+
+struct Matrix *applyMatrix(func_t f,struct Matrix *mat)
+{
+	double **values = mat->values;
+	for(size_t i=0;i<mat->lines;i++)
+		for(size_t j =0;j<mat->cols;j++)
+			values[i][j] = f(values[i][j]);
+	return initMatrix(mat->lines, mat->cols, values);
+}
+
+struct Matrix *hadamarMatrix(struct Matrix *a, struct Matrix *b)
+{
+	size_t lines = a->lines;
+	size_t cols = a->cols;
+	struct Matrix *output = initMatrix(lines,cols,initList(lines, cols));
+	for(size_t i =0; i<lines;i++)
+		for(size_t j =0; j<cols;j++)
+			output->values[i][j] = a->values[i][j]*b->values[i][j];
+	return output;
+}
+
+struct Matrix *sumMatrix(struct Matrix *a, struct Matrix *b)
+{
+	size_t lines = a->lines;
+	size_t cols = a->cols;
+	struct Matrix *output = initMatrix(lines,cols,initList(lines,cols));
+	for(size_t i = 0; i<lines;i++)
+		for(size_t j = 0; j<cols;j++)
+			output->values[i][j] = a->values[i][j] + b->values[i][j];
+	return output;
+}
+
+struct Matrix *transMatrix(struct Matrix *mat)
+{
+	size_t lines = mat->lines;
+	size_t cols = mat->cols;
+	struct Matrix *output = initMatrix(cols,lines,initList(cols,lines));
+	for(size_t i = 0; i < lines; i++)
+		for(size_t j = 0; j<cols; j++)
+			output->values[j][i] = mat->values[i][j];
+	return output;
+}
