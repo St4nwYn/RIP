@@ -6,7 +6,7 @@ CFLAGS = -Wall -Wextra -std=c99 -O0 -g
 LDFLAGS =
 LDLIBS = -lm
 
-OBJ = NeuralNetwork.o Main.o
+OBJ = NeuralNetwork.o Save.o Main.o
 DEP = ${OBJ:.o=.d}
 
 all: Main
