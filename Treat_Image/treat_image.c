@@ -59,6 +59,117 @@ SDL_Surface* display_image(SDL_Surface *img) {
 
 }
 
+struct Matrix *sklt(struct Matrix *mat)
+{
+  int o = 1;
+  struct Matrix *ret = initMatrix(mat -> lines, mat -> cols,initList(mat -> lines, mat -> cols));
+  for(size_t i =0; i<mat -> lines;i++)
+    for(size_t j = 0; j<mat -> cols;j++)
+      ret->values[i][j] = 1;
+  for(size_t i = 0; i < mat -> lines; i++)
+    {
+      o = 1;
+      for(size_t j = 0; j < mat -> cols; j++)
+	{
+	  if(j + 1 < mat -> lines && mat -> values[i][j+1] != 0)
+	    o = 1;
+	  if(mat -> values[i][j] == 0 && o == 1)
+	    {
+	      o = 0;
+	      ret -> values[i][j] = 0;
+	    }
+	  if(mat -> values[i][j] != 0)
+	    o = 1;
+	}
+    }
+  return ret;
+}
+struct Matrix *applysklt(struct Matrix *mat)
+{
+  struct Matrix *ret = initMatrix(mat -> lines, mat -> cols,initList(mat -> lines, mat -> cols));
+  for(size_t i =0; i<mat -> lines;i++)
+    for(size_t j = 0; j<mat -> cols;j++)
+      ret->values[i][j] = 1;
+  int o = 0;
+  for(size_t i = 0; i < mat -> lines; i++)
+    {
+      o = 0;
+      for(size_t j = 0; j < mat -> cols; j++)
+	{
+	  if(mat -> values[i][j] == 0)
+	    o = o==0;    
+	  if(o == 1)
+	    {
+	      ret -> values[i][j] = 0;
+	    }
+	}
+    } 
+
+  return ret;
+}
+struct Matrix *rogne(struct Matrix *mat)
+{
+  struct Matrix *ret = initMatrix(32, 16,initList(32,16));
+  for(size_t i =0; i<32;i++)
+    for(size_t j = 0; j<16;j++)
+      ret->values[i][j] = 1;
+    
+  size_t initi;
+  size_t endi;
+  size_t initj;
+  size_t endj;
+  size_t r;
+  size_t t;
+  if (mat -> lines >= 32 && mat -> cols >= 16)
+    {
+      initi = 0;
+      endi = mat -> lines;
+      initj = 0;
+      endj = mat -> cols;
+      r = (32 - mat -> lines)/2;
+      t = (24 - mat -> cols)/2;
+      for(size_t i = initi; i < endi && r < 32; i++, r++)
+	{
+	  t = 0; 
+	  for(size_t j = initj; j < endj && t < 16; j++, t++)
+	ret -> values[r][t] = mat -> values[i][j];
+	}
+    }
+  else if(mat -> lines < 32)
+    {
+      r = (32 - mat -> lines)/2;
+      t = (16 - mat -> cols)/2;
+      initi = 0;
+      endi = mat -> lines;
+      initj = 0;
+      endj = mat -> cols;
+      for(size_t i = initi; i < endi && r < 32; i++, r++)
+	{
+	  t = (16 - mat -> cols)/2;
+	  for(size_t j = initj; j < endj && t < 16; j++, t++)
+	    ret -> values[r][t] = mat -> values[i][j];
+	}
+    }
+  else
+    {
+      r = (32 - mat -> lines)/2;
+      t = (16 - mat -> cols)/2;
+      initi = 0;
+      endi = mat -> lines;
+      initj = 0;
+      endj = mat -> cols;
+      for(size_t i = initi; i < endi && r < 32; i++, r++)
+	{
+	  t = (16 - mat -> cols)/2; 
+	  for(size_t j = initj; j < endj && t < 16; j++, t++)
+	    {
+	      ret -> values[r][t] = mat -> values[i][j];
+	    }
+	}
+    }
+  return ret;
+}
+
 int main(int argc, char* argv[])                                                
 {
 	//First = check the entry    
