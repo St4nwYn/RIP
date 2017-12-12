@@ -142,47 +142,57 @@ void initElm(struct Network *NN, char* path)
 			NN->EoutputL[i][j]->value = output[i][j];
 	}
 }
-
 void initWeights(struct Network *NN, char *path, char mode)
-{/*
-	if (mode == 'r')
-	{
-		size_t len = strlen(path);
-		char *file = calloc(len+11,sizeof(char));
- 		strcat(file,path);
-		strcat(file,"In.txt");
-		//file[len+2] = '\0';
-		for(size_t i =0; i<NN->nbi;i++)
-		{
-			//NN->inutL[0][i]->weights=File2Mat(file)[0];
-  	}
-		NN->inputL[0][1]->weights=File2Mat("xor/I2.txt")[0];
- 	
-	
-  	NN->hiddenL[0]->weights=File2Mat("xor/H1.txt")[0];
-  	NN->hiddenL[1]->weights=File2Mat("xor/H2.txt")[0];
- 		free(file); 
-	}
-
-	else
-	{*/
-		for(size_t i = 0; i<NN->nbh;i++)
+{
+  if (mode == 'r')
     {
-     	NN->inputL[0][0]->weights[i] = randint();
-     	NN->inputL[0][1]->weights[i] = randint();
-    }
-  
-   	for(size_t i = 1; i<NN->nbex;i++)
-    	for(size_t j = 0; j<NN->nbi;j++)
-      	NN->inputL[i][j]->weights = NN->inputL[0][j]->weights;
-  
-  
- 	 	for(size_t i = 0; i<NN->nbh;i++)
+      size_t len = strlen(path);
+      char *file = calloc(len+10,sizeof(char));
+      char *nb = calloc(3,sizeof(char)); 
+      strcat(file,path);
+      //strcat(file,"In.txt");
+      //file[len+2] = '\0';
+      for(size_t i =0; i<NN->nbi;i++)
+	{
+	  sprintf(nb,"%u", i + 1);
+	  strcat(file,"I");
+	  strcat(file,nb);
+	  strcat(file,".txt");
+	  NN->inputL[0][i]->weights=File2Mat(file)[0];
+	  for(size_t j = len; j < strlen(file); j++)
+	    file[j] = '\0';
+  	}
+      //NN->inputL[0][1]->weights=File2Mat("xor/I2.txt")[0];
+      
+      for(size_t i =0; i<NN->nbh;i++)
+	{
+	  sprintf(nb,"%u", i + 1);
+	  strcat(file,"H");
+	  strcat(file,nb);
+	  strcat(file,".txt");
+	  NN->hiddenL[i]->weights=File2Mat(file)[0];
+	  for(size_t j = len; j < strlen(file); j++)
+	    file[j] = '\0';
+  	}
+      /* NN->hiddenL[0]->weights=File2Mat("xor/H1.txt")[0]; */
+      /* NN->hiddenL[1]->weights=File2Mat("xor/H2.txt")[0]; */
+      free(file); 
+    }  
+  else
+    {
+      for(size_t i = 0; i<NN->nbh;i++)
+	{
+	  NN->inputL[0][0]->weights[i] = randint();
+	  NN->inputL[0][1]->weights[i] = randint();
+	}
+      for(size_t i = 0; i<NN->nbh;i++)
     	for(size_t j = 0; j<NN->nbo;j++)
-      	NN->hiddenL[i]->weights[j] = randint();	
-	
+	  NN->hiddenL[i]->weights[j] = randint();	
+    }
+  for(size_t i = 1; i<NN->nbex;i++)
+    for(size_t j = 0; j<NN->nbi;j++)
+      NN->inputL[i][j]->weights = NN->inputL[0][j]->weights;
 }
-
 
 void forward(struct Network *NN, size_t e)
 {
