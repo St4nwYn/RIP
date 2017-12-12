@@ -6,6 +6,7 @@
 #include "segmentation.h"
 #include "pretreat.h"
 #include "pixel_operations.h"
+#include "Save.h"
 
 struct Tuplebox
 {
@@ -111,12 +112,12 @@ struct Matrix *applysklt(struct Matrix *mat)
     } 
 
   return ret;
-}
+}*/
 struct Matrix *rogne(struct Matrix *mat)
 {
-  struct Matrix *ret = initMatrix(32, 16,initList(32,16));
+  struct Matrix *ret = initMatrix(32, 24,initList(32,24));
   for(size_t i =0; i<32;i++)
-    for(size_t j = 0; j<16;j++)
+    for(size_t j = 0; j<24;j++)
       ret->values[i][j] = 1;
     
   size_t initi;
@@ -125,7 +126,7 @@ struct Matrix *rogne(struct Matrix *mat)
   size_t endj;
   size_t r;
   size_t t;
-  if (mat -> lines >= 32 && mat -> cols >= 16)
+  if (mat -> lines >= 32 && mat -> cols >= 24)
     {
       initi = 0;
       endi = mat -> lines;
@@ -136,37 +137,37 @@ struct Matrix *rogne(struct Matrix *mat)
       for(size_t i = initi; i < endi && r < 32; i++, r++)
 	{
 	  t = 0; 
-	  for(size_t j = initj; j < endj && t < 16; j++, t++)
+	  for(size_t j = initj; j < endj && t < 24; j++, t++)
 	ret -> values[r][t] = mat -> values[i][j];
 	}
     }
   else if(mat -> lines < 32)
     {
       r = (32 - mat -> lines)/2;
-      t = (16 - mat -> cols)/2;
+      t = (24 - mat -> cols)/2;
       initi = 0;
       endi = mat -> lines;
       initj = 0;
       endj = mat -> cols;
       for(size_t i = initi; i < endi && r < 32; i++, r++)
 	{
-	  t = (16 - mat -> cols)/2;
-	  for(size_t j = initj; j < endj && t < 16; j++, t++)
+	  t = (24 - mat -> cols)/2;
+	  for(size_t j = initj; j < endj && t < 24; j++, t++)
 	    ret -> values[r][t] = mat -> values[i][j];
 	}
     }
   else
     {
       r = (32 - mat -> lines)/2;
-      t = (16 - mat -> cols)/2;
+      t = (24 - mat -> cols)/2;
       initi = 0;
       endi = mat -> lines;
       initj = 0;
       endj = mat -> cols;
       for(size_t i = initi; i < endi && r < 32; i++, r++)
 	{
-	  t = (16 - mat -> cols)/2; 
-	  for(size_t j = initj; j < endj && t < 16; j++, t++)
+	  t = (24 - mat -> cols)/2; 
+	  for(size_t j = initj; j < endj && t < 24; j++, t++)
 	    {
 	      ret -> values[r][t] = mat -> values[i][j];
 	    }
@@ -176,10 +177,10 @@ struct Matrix *rogne(struct Matrix *mat)
 
 }
 
-*/
+
 void preTreat(SDL_Surface *img)
 {
-	ToGrayScale(img);
+  ToGrayScale(img);
   Binarize(img);
   SDL_SaveBMP(img,"binarize.bmp");
 }
@@ -246,39 +247,32 @@ struct Tuplebox *Chars(SDL_Surface *img)
 	return out;
 }
 
-double **box2mat(SDL_Surface *img, struct Tuplebox *tuple)
+double ***box2mat(SDL_Surface *img, struct Tuplebox *tuple)
 {
 	Coord box;
 	Uint32 pixel;
 	Uint8 r,g,b;
-	double **out = calloc(tuple->len,sizeof(double*));
+	double ***out = calloc(tuple->len,sizeof(double**));
 	for(int k = 0;(size_t)k<tuple->len; k++)
 	{
 		box = tuple->box[k];
 		printf("x = %d,y = %d, h =  %d, w = %d\n",box.x,box.y,box.h,box.w);
 		box.h++;
   	box.w++;
-		out[k] = calloc(box.w * box.h,sizeof(double));
+		out[k] = calloc(box.h,sizeof(double*));
 		for(int i = box.y; i<box.h+box.y;i++)
 		{
+			out[k][i-box.y] = calloc(box.w,sizeof(double));
 			for(int j = box.x; j<box.w+box.x;j++)
 			{
 				pixel = getpixel(img,j,i);
  		 		SDL_GetRGB(pixel,img->format, &r, &g, &b);
 				if (r == 255)
-				{
-					out[k][(i-box.y)*box.w + (j-box.x)] = 1;
-					printf("  ");
-				}	
+					out[k][i-box.y][j-box.x] = 1;
 				else
-				{
-					out[k][(i-box.y)*box.w + (j-box.x)] = 0;
-					printf("0 ");
-				}
+					out[k][i-box.y][j-box.x] = 0;
 			}
-		printf("\n");
 		}
-		printf("\n");
 	}
 	return out;
 }
@@ -294,15 +288,39 @@ void init(char* path)
 	//display_image(img);
 	
 	img = Load_Image("binarize.bmp");
-	double **listofmat = box2mat(img,output);
-	printf("%f",listofmat[0][0]);
-	//for(size_t i =0;i<len;i++)
-	//	printf("x = %d,y = %d,h = %d,w = %d\n",box[i].x,box[i].y,box[i].h,box[i].w);
+	double ***listofmat = box2mat(img,output);
+	printf("%f\n",listofmat[0][0][0]);
+	struct Matrix **Mat = malloc(output->len*sizeof(struct Matrix));
+	double **out = calloc(output->len,sizeof(double*));
+	for(size_t i = 0; i<output->len;i++)
+	{
+		
+		Mat[i] = initMatrix(output->box[i].h,output->box[i].w,listofmat[i]);
+		Mat[i] = rogne(Mat[i]);
+		listofmat[i] = Mat[i]->values;
+		out[i] = calloc(24*32,sizeof(double));
+		for(int j =0; j<32;j++)
+		{
+			for(int k = 0; k<24;k++)
+			{
+				out[i][j*24+k] = listofmat[i][j][k];
+				printf("%.0f ",out[i][j*24+k]);
+			}
+			printf("\n");
+		}
+		printf("\n");
+	}
+	Mat2File("../Xor/learning/alpha/input.txt",out,output->len,32*24);
 	SDL_FreeSurface(img);
 	SDL_Quit();
 }
-
+<<<<<<< HEAD
+/*
 int main(int argc, char* argv[])                                                
+=======
+
+/*int main(int argc, char* argv[])                                                
+>>>>>>> 7ea797b797215617f989c22c599b4cd3c8623029
 {
   if (argc>2)
     errx(1,"Too many arguments given.");
@@ -312,8 +330,9 @@ int main(int argc, char* argv[])
 	 init(argv[1]);
 	 return 0; 
 
+<<<<<<< HEAD
 }
-/*
+*/
 void SegmentationForInterface(SDL_Surface *img)                 {
 	//First = check the entry    
 	SDL_Init(SDL_INIT_VIDEO);                                                   
@@ -340,7 +359,11 @@ void SegmentationForInterface(SDL_Surface *img)                 {
 	 Polish(img, 30,margeG,margeD);
 	 PolishH(img, 30,margeG,margeD);	 
 	 //display_image(img);
+=======
+}*/
+>>>>>>> 7ea797b797215617f989c22c599b4cd3c8623029
 
+void SegmentationForInterface(SDL_Surface *img)                 {
 	 //Rect
 	 Coord *box = calloc(img -> h, sizeof(Coord));
 	 box[0].x = 0;
@@ -380,10 +403,14 @@ void SegmentationForInterface(SDL_Surface *img)                 {
 	 free(histo);
 	 free(box);
 
+<<<<<<< HEAD
  SDL_SaveBMP(img,"modif.bmp");
 	 SDL_FreeSurface(img);
 	 SDL_Quit();
 	 
 	 return 0; 
 
-} */ 
+} 
+=======
+}  
+>>>>>>> 7ea797b797215617f989c22c599b4cd3c8623029
