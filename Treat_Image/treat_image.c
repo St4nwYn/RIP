@@ -256,7 +256,6 @@ double ***box2mat(SDL_Surface *img, struct Tuplebox *tuple)
 	for(int k = 0;(size_t)k<tuple->len; k++)
 	{
 		box = tuple->box[k];
-		printf("x = %d,y = %d, h =  %d, w = %d\n",box.x,box.y,box.h,box.w);
 		box.h++;
   	box.w++;
 		out[k] = calloc(box.h,sizeof(double*));
@@ -289,7 +288,6 @@ void init(char* path)
 	
 	img = Load_Image("binarize.bmp");
 	double ***listofmat = box2mat(img,output);
-	printf("%f\n",listofmat[0][0][0]);
 	struct Matrix **Mat = malloc(output->len*sizeof(struct Matrix));
 	double **out = calloc(output->len,sizeof(double*));
 	for(size_t i = 0; i<output->len;i++)
@@ -304,23 +302,15 @@ void init(char* path)
 			for(int k = 0; k<24;k++)
 			{
 				out[i][j*24+k] = listofmat[i][j][k];
-				printf("%.0f ",out[i][j*24+k]);
 			}
-			printf("\n");
 		}
-		printf("\n");
 	}
 	Mat2File("../Xor/learning/alpha/input.txt",out,output->len,32*24);
 	SDL_FreeSurface(img);
 	SDL_Quit();
 }
-<<<<<<< HEAD
 /*
 int main(int argc, char* argv[])                                                
-=======
-
-/*int main(int argc, char* argv[])                                                
->>>>>>> 7ea797b797215617f989c22c599b4cd3c8623029
 {
   if (argc>2)
     errx(1,"Too many arguments given.");
@@ -330,7 +320,6 @@ int main(int argc, char* argv[])
 	 init(argv[1]);
 	 return 0; 
 
-<<<<<<< HEAD
 }
 */
 void SegmentationForInterface(SDL_Surface *img)                 {
@@ -360,7 +349,6 @@ void SegmentationForInterface(SDL_Surface *img)                 {
 	 PolishH(img, 30,margeG,margeD);	 
 	 //display_image(img);
 =======
-}*/
 >>>>>>> 7ea797b797215617f989c22c599b4cd3c8623029
 
 void SegmentationForInterface(SDL_Surface *img)                 {
@@ -413,4 +401,4 @@ void SegmentationForInterface(SDL_Surface *img)                 {
 } 
 =======
 }  
->>>>>>> 7ea797b797215617f989c22c599b4cd3c8623029
+>>>>>>> 7ea797b797215617f989c22c599b4cd3c862302
