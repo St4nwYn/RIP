@@ -201,6 +201,7 @@
                   <object class="GtkLabel" id="ImageView">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
+                    <property name="hexpand">True</property>
                     <property name="label" translatable="yes">Image View</property>
                   </object>
                   <packing>
@@ -209,22 +210,28 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkTextView" id="Text">
+                  <object class="GtkScrolledWindow">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <property name="pixels_inside_wrap">1</property>
-                    <property name="indent">2</property>
+                    <property name="shadow_type">in</property>
+                    <child>
+                      <object class="GtkTextView" id="Text">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="pixels_inside_wrap">1</property>
+                        <property name="indent">2</property>
+                      </object>
+                    </child>
                   </object>
                   <packing>
                     <property name="position">1</property>
-                    <property name="tab_expand">True</property>
-                    <property name="tab_fill">False</property>
                   </packing>
                 </child>
                 <child type="tab">
                   <object class="GtkLabel" id="TextView">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
+                    <property name="hexpand">True</property>
                     <property name="label" translatable="yes">Text View</property>
                   </object>
                   <packing>
