@@ -51,6 +51,23 @@ void keepGoodW(struct Network *NN, char *path)
       
 }
 
+double **idA()
+{
+  double **id = calloc(52,sizeof(double));
+  for(size_t i = 0; i < 52; i++)
+    id[i] = calloc(52,sizeof(double));
+  size_t o=0;
+  for(size_t i = 0; i < 52; i++)
+    {	
+      for(size_t j = 0; j < 52; j++)
+	{
+	  if (j != o)
+	    id[i][j] = 1;
+	} 	
+      o++;
+    }
+  return id;
+}
 
 void xor(char mode)
 {
