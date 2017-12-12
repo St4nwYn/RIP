@@ -34,7 +34,7 @@ struct Network *initNetwork(size_t nbex, size_t nbi, size_t nbh, size_t nbo)
     {
       NN->inputL[i]=calloc(nbi,sizeof(struct Neuron*));
       for(size_t j = 0; j<nbi;j++)
-	NN->inputL[i][j] = initNeuron(0,nbh);
+			NN->inputL[i][j] = initNeuron(0,nbh);
       NN->EoutputL[i]=calloc(nbo,sizeof(struct Neuron*));
       NN->outputL[i]=calloc(nbo,sizeof(struct Neuron*));
       for(size_t j = 0; j<nbo;j++)
