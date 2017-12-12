@@ -1,20 +1,7 @@
 #include <string.h>
 #include "NeuralNetwork.h"
 #include "Save.h"
-/*double **list2mat(double *list)
-{
-  struct Network *NN = initNetwork(4,2,2,1);
-  initElm(NN, "xor/");
-  //printMatrix(NN->inputL,4,2);
-  printMatrix(NN->EoutputL,4,1);
-    if (mode == 'r')
-    {
-    initElm(NN, "xor/");
-    for(size_t e =0; e<4;e++)
-    forward(NN,e);
-    printMatrix(NN->outputL,4,1);
-    }
-}*/
+
 double **list2mat(double *list)
 {
 	double **out = calloc(1, sizeof(double*));
@@ -76,6 +63,23 @@ void xor(char mode)
   printMatrix(NN -> outputL, 4, 1);
 }
 
+void alphalearn()
+{
+	int i =0;
+  struct Network *NN = initNetwork(52,768,100,52);
+  initElm(NN,"learning/alpha");
+  initWeights(NN,"learning/alpha",'w');
+	while (learning(NN,0.49)!=1)
+  {
+    i++;
+    initWeights(NN,"learning/alpha",'w');
+  }
+      keepGoodW(NN, "learning/alpha");
+    
+  printf("\nNB OF CALLS : %d\n", i);
+  printMatrix(NN -> outputL, 52, 52);
+
+}
 
 int main()
 {
